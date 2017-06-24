@@ -29,7 +29,11 @@ class Login extends Component {
           console.log('User authenticated: ' + user.displayName);
           console.log(user);
           let err = "Welcome, " + user.displayName;
-          this.setState({err: err});
+          let successful = "You are successfully logged in with Google."
+          this.setState({
+            err: err,
+            successful: successful,
+          });
         //User isn't authenticated.
         } else {
           console.log('User not authenticated.');
@@ -79,6 +83,7 @@ class Login extends Component {
 
     this.state = {
       err: '',
+      successful: ' ',
     };
 
     this.logout = this.logout.bind(this);
@@ -91,7 +96,7 @@ class Login extends Component {
       <div>
 
         <p>{this.state.err}</p>
-
+        <p>{this.state.successful}</p>
         <button onClick={this.logout} id="logoutButton" className="hide">Log Out</button>
         <br />
         <button onClick={this.google} id="google">Login With Google</button>
