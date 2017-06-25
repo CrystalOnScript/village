@@ -28,6 +28,10 @@ class Login extends Component {
         if (auth != null) {
           console.log('User authenticated: ' + user.displayName);
           console.log(user);
+          var googleBtn = document.getElementById('googleBtn');
+          googleBtn.classList.add('hide');
+          let lout = document.getElementById("logoutButton");
+          lout.classList.remove("hide")
           let err = "Welcome, " + user.displayName;
           let successful = "You are successfully logged in with Google."
           this.setState({
@@ -47,9 +51,14 @@ class Login extends Component {
     firebase.auth().signOut();
     let lout = document.getElementById("logoutButton");
     lout.classList.add("hide")
-
+    var googleBtn = document.getElementById('googleBtn');
+    googleBtn.classList.remove('hide');
     let err = "Thanks!";
-    this.setState({err: err});
+    let successful = "You have successfully logged out."
+    this.setState({
+      err: err,
+      successful: successful,
+    });
   }
 
   google(){
@@ -99,7 +108,7 @@ class Login extends Component {
         <p>{this.state.successful}</p>
         <button onClick={this.logout} id="logoutButton" className="hide">Log Out</button>
         <br />
-        <button onClick={this.google} id="google">Login With Google</button>
+        <button onClick={this.google} id="googleBtn">Login With Google</button>
       </div>
     );
   }
