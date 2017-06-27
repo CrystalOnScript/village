@@ -1,21 +1,4 @@
-// function subscribeUserToPush() {
-//   return getSWRegistration()
-//   .then(function(registration) {
-//     const subscribeOptions = {
-//       userVisibleOnly: true,
-//       applicationServerKey: urlBase64ToUint8Array(
-//         'BKBsp4EQehL1KSh3tdhKxFB5CQ0KxJO2w8TmQxVexy41Hckvwf0c-iyn0GkrCX73YG0BnPHW-V9I2fwXUAXT3mE'
-//       )
-//     };
-//
-//     return registration.pushManager.subscribe(subscribeOptions);
-//   })
-//   .then(function(pushSubscription) {
-//     console.log('Received PushSubscription: ', JSON.stringify(pushSubscription));
-//     return pushSubscription;
-//   });
-// }
-// export default subscribeUserToPush;
+
 'use strict';
 
 const applicationServerPublicKey = 'BKBsp4EQehL1KSh3tdhKxFB5CQ0KxJO2w8TmQxVexy41Hckvwf0c-iyn0GkrCX73YG0BnPHW-V9I2fwXUAXT3mE';
@@ -125,8 +108,9 @@ function subscribeUser() {
 
 function updateSubscriptionOnServer(subscription) {
   // TODO: Send subscription to application server
-
+  console.log("subscription", subscription)
   const subscriptionJson = document.querySelector('.js-subscription-json');
+  console.log("subscriptionJson", subscriptionJson)
   const subscriptionDetails =
     document.querySelector('.js-subscription-details');
 
