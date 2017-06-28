@@ -1,7 +1,27 @@
+/*
+*
+*  Push Notifications codelab
+*  Copyright 2015 Google Inc. All rights reserved.
+*
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License
+*
+*/
+
+/* eslint-env browser, es6 */
 
 'use strict';
 
-const applicationServerPublicKey = 'BKBsp4EQehL1KSh3tdhKxFB5CQ0KxJO2w8TmQxVexy41Hckvwf0c-iyn0GkrCX73YG0BnPHW-V9I2fwXUAXT3mE';
+const applicationServerPublicKey = 'BI7O9Pvye3tnDs41ujnXlR-Ta7khQL0LkwiHPSzj2XS6y05yaVQJvO5pX6VIV1r6z_7GHAU_Wq-NI7h9fH6Drok';
 // 6S9C6Gn-MHkMIsXJMMMTHstPeGesL_9A6arOC_pt8wE
 const pushButton = document.querySelector('.js-push-btn');
 
@@ -107,10 +127,9 @@ function subscribeUser() {
 };
 
 function updateSubscriptionOnServer(subscription) {
+  // TODO: Send subscription to application server
 
-  console.log("subscription", subscription)
   const subscriptionJson = document.querySelector('.js-subscription-json');
-  console.log("subscriptionJson", subscriptionJson)
   const subscriptionDetails =
     document.querySelector('.js-subscription-details');
 
@@ -120,33 +139,4 @@ function updateSubscriptionOnServer(subscription) {
   } else {
     subscriptionDetails.classList.add('is-invisible');
   }
-}
-
-pushButton.addEventListener('click', function() {
-  pushButton.disabled = true;
-  if (isSubscribed) {
-    unsubscribeUser();
-  } else {
-    subscribeUser();
-  }
-});
-
-function unsubscribeUser() {
-  swRegistration.pushManager.getSubscription()
-  .then(function(subscription) {
-    if (subscription) {
-      return subscription.unsubscribe();
-    }
-  })
-  .catch(function(error) {
-    console.log('Error unsubscribing', error);
-  })
-  .then(function() {
-    updateSubscriptionOnServer(null);
-
-    console.log('User is unsubscribed.');
-    isSubscribed = false;
-
-    updateBtn();
-  });
 }
