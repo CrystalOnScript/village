@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "villageapp-6bbe4"
+    "default": "villageapp-6bbe4",
+    "villageApp": "villageapp-6bbe4"
   }
 }
