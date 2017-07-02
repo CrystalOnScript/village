@@ -1,30 +1,43 @@
 process.env.DEBUG = 'actions-on-google:*';
-const ApiAiApp = require('actions-on-google').ApiAiApp;
+//const ApiAiApp = require('actions-on-google').ApiAiApp;
 const express = require("express");
+const bodyParser = require("body-parser");
 
 // API.AI actions
-const UNRECOGNIZED_DEEP_LINK = 'deeplink.unknown';
-const ASK_HELP = 'ask.help';
+//const UNRECOGNIZED_DEEP_LINK = 'deeplink.unknown';
+//const ASK_HELP = 'ask.help';
 
 // API.AI parameter names
-const CATEGORY_ARGUMENT = 'category';
+//const CATEGORY_ARGUMENT = 'category';
 
 // Include Server Dependencies
 const expressApp = express();
-const bodyParser = require("body-parser");
+
+// Sets an initial port.
+const PORT = process.env.PORT || 8080;
 
 expressApp.use(bodyParser.json());
 expressApp.use(bodyParser.urlencoded({ extended: true }));
 expressApp.use(bodyParser.text());
 expressApp.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
-expressApp.use(express.static("./public"));
+expressApp.use(express.static("./build"));
+
+expressApp.post("/api/messaging", function(req, res) {
+  console.log("Messaging token: " + req.body.messagetoken);
+});
 
 // Main "/" Route. Redirects user to rendered React application.
 expressApp.get("*", function(req, res) {
-  res.sendFile(__dirname + "/public/index.html");
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+// Listener.
+expressApp.listen(PORT, () => {
+  console.log("App listening on PORT: " + PORT);
+});
+
+/*
 exports.villageApp = (request, response) => {
   const app = new App({ request, response });
   console.log('Request headers: ' + JSON.stringify(request.headers));
@@ -71,12 +84,6 @@ expressApp.post('/', (request, response) => {
   actionMap.set(ASK_INTENT, askIntent);
 
 });
-
-// Sets an initial port.
-const PORT = process.env.PORT || 8080;
-// Listener.
-expressApp.listen(PORT, () => {
-  console.log("App listening on PORT: " + PORT);
-});
+*/
 
 module.exports = expressApp;
