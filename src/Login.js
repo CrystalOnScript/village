@@ -1,8 +1,39 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-
+import helpers from "./utils/helpers";
 
 // Initialize Firebase
+var config = {
+  apiKey: "AIzaSyD-np5USZAOXmA51TB8EmNcPPYCnffOmjI",
+  authDomain: "villageapp-6bbe4.firebaseapp.com",
+  databaseURL: "https://villageapp-6bbe4.firebaseio.com",
+  projectId: "villageapp-6bbe4",
+  storageBucket: "villageapp-6bbe4.appspot.com",
+  messagingSenderId: "955973472886"
+};
+firebase.initializeApp(config);
+
+const messaging = firebase.messaging();
+messaging.requestPermission()
+.then(function() {
+  console.log("Have permission");
+  return messaging.getToken();
+})
+.then(function(token) {
+  console.log("We have a token: " + token);
+  helpers.sendToken(token).then(function(response) {
+    console.log("We are back from the helpers call.");
+  })
+})
+.catch(function(err) {
+  console.log('Error occurred in push');
+})
+
+messaging.onMessage(function(payload) {
+  console.log("On Message: ", payload);
+});
+
+/* Initialize Firebase from Crystal.
 const config = {
     apiKey: "AIzaSyC6UWBWM3mswRaLQFj-oDxSPmRTnbHWvjg",
     authDomain: "yourvillage-bbea7.firebaseapp.com",
@@ -12,10 +43,7 @@ const config = {
     messagingSenderId: "740574341979"
   };
 firebase.initializeApp(config);
-
-
-
-
+*/
 
 class Login extends Component {
 
