@@ -29,6 +29,10 @@ messaging.requestPermission()
   console.log('Error occurred in push');
 })
 
+messaging.onMessage(function(payload) {
+  console.log("On Message: ", payload);
+});
+
 /* Initialize Firebase from Crystal.
 const config = {
     apiKey: "AIzaSyC6UWBWM3mswRaLQFj-oDxSPmRTnbHWvjg",

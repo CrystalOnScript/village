@@ -4,13 +4,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 
-// API.AI actions
-//const UNRECOGNIZED_DEEP_LINK = 'deeplink.unknown';
-//const ASK_HELP = 'ask.help';
-
-// API.AI parameter names
-//const CATEGORY_ARGUMENT = 'category';
-
 // Include Server Dependencies
 const expressApp = express();
 
