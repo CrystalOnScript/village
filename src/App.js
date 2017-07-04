@@ -3,7 +3,6 @@ import logo from './vilagelogo.png';
 import './App.css';
 import Login from './Login';
 
-
 class App extends Component {
 
 
