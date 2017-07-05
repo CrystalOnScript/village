@@ -91,6 +91,7 @@ expressApp.post("/api/sendMessage", function(req, res) {
     .catch(function(error) {
       console.log("Error sending message:", error);
     });
+
 });
 
 // Sets an initial port.
