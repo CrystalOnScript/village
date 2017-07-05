@@ -133,7 +133,20 @@ class Login extends Component {
     const user = firebase.auth().currentUser;
     firebase.database().ref("users/"+user.uid).on("value", function(snapshot){
       const token = snapshot.val().token
-      firebase.database().ref("testvillage/").push(token);
+      firebase.database().ref("testvillage/").push({
+        token: token
+      });
+    })
+  }
+
+  pullData(){
+    firebase.database().ref("testvillage/").once("value", function(snapshot){
+      snapshot.forEach(function(childSnapshot) {
+        var item = childSnapshot.val().token;
+        // item.key = childSnapshot.key;
+        console.log(item)
+    });
+
     })
   }
 
@@ -149,6 +162,7 @@ class Login extends Component {
     this.google = this.google.bind(this);
     this.sendPush = this.sendPush.bind(this);
     this.subToTest = this.subToTest.bind(this);
+    this.pullData = this.pullData.bind(this);
   };
 
 
@@ -165,6 +179,8 @@ class Login extends Component {
         <button onClick={this.sendPush}>Push Notification</button>
         <br />
         <button onClick={this.subToTest}>Sub To Test Village</button>
+        <br />
+        <button onClick={this.pullData}>Pull Tokens</button>
       </div>
     );
   }
