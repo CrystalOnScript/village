@@ -6,8 +6,9 @@ const helpers = {
 		console.log("We are in helper class and have our token! " + token);
 		axios.post("/api/messaging", {
 			token: token
-	});
+		});
 	}
-};
+}
+
 
 export default helpers;
