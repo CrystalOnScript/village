@@ -26,7 +26,7 @@ messaging.requestPermission()
   })
 })
 .catch(function(err) {
-  console.log('Error occurred in push');
+  console.log('Error occurred in push', err);
 })
 
 messaging.onMessage(function(payload) {

@@ -4,9 +4,9 @@ import axios from "axios";
 const helpers = {
 	sendToken: (token) => {
 		console.log("We are in helper class and have our token! " + token);
-		return axios.post("/api/messaging", {
-			messagetoken: token
-		});
+		axios.post("/api/messaging", {
+			token: token
+	});
 	}
 };
 

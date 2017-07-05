@@ -3,7 +3,14 @@ process.env.DEBUG = 'actions-on-google:*';
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
+const admin = require("firebase-admin");
 
+const serviceAccount = require("./villageSDK.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://villageapp-6bbe4.firebaseio.com"
+});
 // Include Server Dependencies
 const expressApp = express();
 
@@ -20,7 +27,29 @@ expressApp.get("*", function(req, res) {
 });
 
 expressApp.post("/api/messaging", function(req, res) {
-  console.log("Messaging token: " + req.body.messagetoken);
+  console.log("Messaging token: " + req.body.token);
+  var registrationToken = req.body.token;
+
+  // See the "Defining the message payload" section below for details
+  // on how to define a message payload.
+  var payload = {
+      notification: {
+        title: "Hello World",
+        body: "Fun message you have!"
+      }
+  };
+
+  // Send a message to the device corresponding to the provided
+  // registration token.
+  admin.messaging().sendToDevice(registrationToken, payload)
+    .then(function(response) {
+      // See the MessagingDevicesResponse reference documentation for
+      // the contents of response.
+      console.log("Successfully sent message:", response);
+    })
+    .catch(function(error) {
+      console.log("Error sending message:", error);
+    });
 });
 
 // Sets an initial port.
