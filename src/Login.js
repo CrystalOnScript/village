@@ -125,7 +125,10 @@ class Login extends Component {
     const user = firebase.auth().currentUser;
     console.log(user.uid);
     firebase.database().ref("users/"+user.uid).on("value", function(snapshot){
-      console.log(snapshot.val().token);
+      const token = snapshot.val().token
+      helpers.pushToken(token).then(function() {
+        console.log("This should work!");
+      })
     })
   }
 

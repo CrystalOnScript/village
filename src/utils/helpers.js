@@ -7,6 +7,13 @@ const helpers = {
 		axios.post("/api/messaging", {
 			token: token
 		});
+	},
+
+	pushToken: (token) => {
+		axios.post("/api/sendMessage",
+		{
+			token: token
+		});
 	}
 }
 

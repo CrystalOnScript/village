@@ -17,8 +17,7 @@ const config = {
 firebase.initializeApp(config);
 
 const database = firebase.database();
-// let FBtoken = firebase.database().ref("/tokens/").once('value');
-// console.log(FBtoken);
+
 
 const serviceAccount = require("./villageSDK.json");
 
@@ -53,6 +52,31 @@ expressApp.post("/api/messaging", function(req, res) {
       notification: {
         title: "Hello World",
         body: "Fun message you have!"
+      }
+  };
+
+  // Send a message to the device corresponding to the provided
+  // registration token.
+  admin.messaging().sendToDevice(registrationToken, payload)
+    .then(function(response) {
+      // See the MessagingDevicesResponse reference documentation for
+      // the contents of response.
+      console.log("Successfully sent message:", response);
+    })
+    .catch(function(error) {
+      console.log("Error sending message:", error);
+    });
+});
+
+expressApp.post("/api/sendMessage", function(req, res) {
+  var registrationToken = req.body.token;
+
+  // See the "Defining the message payload" section below for details
+  // on how to define a message payload.
+  var payload = {
+      notification: {
+        title: "Hi!",
+        body: "You sent this notification to yourself!"
       }
   };
 
