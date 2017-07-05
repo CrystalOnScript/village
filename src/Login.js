@@ -123,10 +123,17 @@ class Login extends Component {
 
   sendPush(){
     const user = firebase.auth().currentUser;
-    console.log(user.uid);
     firebase.database().ref("users/"+user.uid).on("value", function(snapshot){
       const token = snapshot.val().token
       helpers.pushToken(token)
+    })
+  }
+
+  subToTest(){
+    const user = firebase.auth().currentUser;
+    firebase.database().ref("users/"+user.uid).on("value", function(snapshot){
+      const token = snapshot.val().token
+      firebase.database().ref("testvillage/").push(token);
     })
   }
 
@@ -141,6 +148,7 @@ class Login extends Component {
     this.logout = this.logout.bind(this);
     this.google = this.google.bind(this);
     this.sendPush = this.sendPush.bind(this);
+    this.subToTest = this.subToTest.bind(this);
   };
 
 
@@ -155,6 +163,8 @@ class Login extends Component {
         <button onClick={this.google} id="googleBtn">Login With Google</button>
         <br />
         <button onClick={this.sendPush}>Push Notification</button>
+        <br />
+        <button onClick={this.subToTest}>Sub To Test Village</button>
       </div>
     );
   }
