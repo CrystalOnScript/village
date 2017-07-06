@@ -14,20 +14,6 @@ var config = {
 firebase.initializeApp(config);
 
 const messaging = firebase.messaging();
-// messaging.requestPermission()
-// .then(function() {
-//   console.log("Have permission");
-//   return messaging.getToken();
-// })
-// .then(function(token) {
-//   console.log("We have a token: " + token);
-//   helpers.sendToken(token).then(function() {
-//     console.log("We are back from the helpers call.");
-//   })
-// })
-// .catch(function(err) {
-//   console.log('Error occurred in push', err);
-// })
 
 messaging.onMessage(function(payload) {
   console.log("On Message: ", payload);
@@ -102,10 +88,6 @@ class Login extends Component {
         });
         let err = "Welcome, " + user.displayName
         this.setState({err: err});
-
-      helpers.sendToken(token).then(function() {
-        console.log("We are back from the helpers call.");
-      })
     })
     .catch(function(err) {
       console.log('Error occurred in push', err);
@@ -141,11 +123,15 @@ class Login extends Component {
 
   pullData(){
     firebase.database().ref("testvillage/").once("value", function(snapshot){
+      let tokenArray = [];
       snapshot.forEach(function(childSnapshot) {
         var item = childSnapshot.val().token;
-        // item.key = childSnapshot.key;
-        console.log(item)
-    });
+        helpers.pushToken(item);
+        console.log(item);
+        tokenArray.push(item);
+
+    })
+      console.log(tokenArray)
 
     })
   }
@@ -180,7 +166,7 @@ class Login extends Component {
         <br />
         <button onClick={this.subToTest}>Sub To Test Village</button>
         <br />
-        <button onClick={this.pullData}>Pull Tokens</button>
+        <button onClick={this.pullData}>Send Push to TestVillage</button>
       </div>
     );
   }

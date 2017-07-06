@@ -1,3 +1,4 @@
+// TODO UPDATE PACKAGE>JSON START SCRIPT TO 'node server.js'
 process.env.DEBUG = 'actions-on-google:*';
 
 const Assistant = require('actions-on-google').ApiAiAssistant;
