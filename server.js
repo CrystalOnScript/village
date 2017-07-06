@@ -1,10 +1,14 @@
 process.env.DEBUG = 'actions-on-google:*';
-//const ApiAiApp = require('actions-on-google').ApiAiApp;
+
+const Assistant = require('actions-on-google').ApiAiAssistant;
+const request = require('request');
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const firebase = require("firebase");
 const admin = require("firebase-admin");
+
+const MILK = 'milk';
 
 const config = {
   apiKey: "AIzaSyD-np5USZAOXmA51TB8EmNcPPYCnffOmjI",
@@ -17,7 +21,6 @@ const config = {
 firebase.initializeApp(config);
 
 const database = firebase.database();
-
 
 const serviceAccount = require("./villageSDK.json");
 
@@ -39,8 +42,6 @@ expressApp.use(express.static(path.resolve(__dirname, 'build')));
 expressApp.get("*", function(req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
-
-
 
 expressApp.post("/api/messaging", function(req, res) {
   console.log("Messaging token: " + req.body.token);
@@ -103,3 +104,19 @@ expressApp.listen(PORT, () => {
 });
 
 module.exports = expressApp;
+
+exports.villageApp = (req, res) => {
+  const assistant = new Assistant({request: req, response: res});
+  console.log("Village App request headers: " + JSON.stringify(req.headers));
+  console.log("Village APP request body: " + JSON.stringify(req.body));
+
+  function milkHandler (assistant) {
+    const msg = "Contacting village now to get milk. Check back in 5 mins.";
+    assistant.tell(msg);
+  }
+
+  const actionMap = new Map();
+  actionMap.set(MILK, milkHandler);
+
+  assistant.handleRequest(actionMap);
+};
