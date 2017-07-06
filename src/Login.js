@@ -14,36 +14,24 @@ var config = {
 firebase.initializeApp(config);
 
 const messaging = firebase.messaging();
-messaging.requestPermission()
-.then(function() {
-  console.log("Have permission");
-  return messaging.getToken();
-})
-.then(function(token) {
-  console.log("We have a token: " + token);
-  helpers.sendToken(token).then(function(response) {
-    console.log("We are back from the helpers call.");
-  })
-})
-.catch(function(err) {
-  console.log('Error occurred in push');
-})
+// messaging.requestPermission()
+// .then(function() {
+//   console.log("Have permission");
+//   return messaging.getToken();
+// })
+// .then(function(token) {
+//   console.log("We have a token: " + token);
+//   helpers.sendToken(token).then(function() {
+//     console.log("We are back from the helpers call.");
+//   })
+// })
+// .catch(function(err) {
+//   console.log('Error occurred in push', err);
+// })
 
 messaging.onMessage(function(payload) {
   console.log("On Message: ", payload);
 });
-
-/* Initialize Firebase from Crystal.
-const config = {
-    apiKey: "AIzaSyC6UWBWM3mswRaLQFj-oDxSPmRTnbHWvjg",
-    authDomain: "yourvillage-bbea7.firebaseapp.com",
-    databaseURL: "https://yourvillage-bbea7.firebaseio.com",
-    projectId: "yourvillage-bbea7",
-    storageBucket: "",
-    messagingSenderId: "740574341979"
-  };
-firebase.initializeApp(config);
-*/
 
 class Login extends Component {
 
@@ -94,18 +82,36 @@ class Login extends Component {
 
     let provider = new firebase.auth.GoogleAuthProvider();
     let promise = firebase.auth().signInWithPopup(provider);
+    messaging.requestPermission()
+    .then(function() {
+      console.log("Have permission");
+      return messaging.getToken();
+    })
+    .then(function(token) {
+      console.log("We have a token: " + token);
+      let FBtoken = token
+      promise
+      .then( result => {
+        let user = result.user;
+        console.log(result);
 
-    promise
-    .then( result => {
-      let user = result.user;
-      console.log(result);
+        firebase.database().ref("users/"+user.uid).set({
+          email: user.email,
+          name: user.displayName,
+          token: FBtoken
+        });
+        let err = "Welcome, " + user.displayName
+        this.setState({err: err});
 
-      firebase.database().ref("users/"+user.uid).set({
-        email: user.email,
-        name: user.displayName
-      });
-      let err = "Welcome, " + user.displayName
-      this.setState({err: err});
+      helpers.sendToken(token).then(function() {
+        console.log("We are back from the helpers call.");
+      })
+    })
+    .catch(function(err) {
+      console.log('Error occurred in push', err);
+    })
+
+
     });
 
     promise
@@ -113,6 +119,35 @@ class Login extends Component {
       let err = e.message;
       console.log(err);
     });
+  }
+
+  sendPush(){
+    const user = firebase.auth().currentUser;
+    firebase.database().ref("users/"+user.uid).on("value", function(snapshot){
+      const token = snapshot.val().token
+      helpers.pushToken(token)
+    })
+  }
+
+  subToTest(){
+    const user = firebase.auth().currentUser;
+    firebase.database().ref("users/"+user.uid).on("value", function(snapshot){
+      const token = snapshot.val().token
+      firebase.database().ref("testvillage/").push({
+        token: token
+      });
+    })
+  }
+
+  pullData(){
+    firebase.database().ref("testvillage/").once("value", function(snapshot){
+      snapshot.forEach(function(childSnapshot) {
+        var item = childSnapshot.val().token;
+        // item.key = childSnapshot.key;
+        console.log(item)
+    });
+
+    })
   }
 
   constructor(props){
@@ -125,6 +160,9 @@ class Login extends Component {
 
     this.logout = this.logout.bind(this);
     this.google = this.google.bind(this);
+    this.sendPush = this.sendPush.bind(this);
+    this.subToTest = this.subToTest.bind(this);
+    this.pullData = this.pullData.bind(this);
   };
 
 
@@ -137,6 +175,12 @@ class Login extends Component {
         <button onClick={this.logout} id="logoutButton" className="hide">Log Out</button>
         <br />
         <button onClick={this.google} id="googleBtn">Login With Google</button>
+        <br />
+        <button onClick={this.sendPush}>Push Notification</button>
+        <br />
+        <button onClick={this.subToTest}>Sub To Test Village</button>
+        <br />
+        <button onClick={this.pullData}>Pull Tokens</button>
       </div>
     );
   }
