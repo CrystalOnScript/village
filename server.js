@@ -30,6 +30,8 @@ admin.initializeApp({
 });
 // Include Server Dependencies
 const expressApp = express();
+// Sets an initial port.
+const PORT = process.env.PORT || 8080;
 
 expressApp.use(bodyParser.json());
 expressApp.use(bodyParser.urlencoded({ extended: true }));
@@ -95,8 +97,7 @@ expressApp.post("/api/sendMessage", function(req, res) {
 
 });
 
-// Sets an initial port.
-const PORT = process.env.PORT || 8080;
+
 
 // Listener.
 expressApp.listen(PORT, () => {
