@@ -38,7 +38,9 @@ expressApp.use(bodyParser.urlencoded({ extended: true }));
 expressApp.use(bodyParser.text());
 expressApp.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
-expressApp.use(express.static(path.resolve(__dirname, 'build')));
+expressApp.use(express.static(path.join(__dirname, 'build')));
+
+// expressApp.use(express.static(path.resolve(__dirname, 'build')));
 
 // Main "/" Route. Redirects user to rendered React application.
 expressApp.get("/", function(req, res) {
