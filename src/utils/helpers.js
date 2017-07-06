@@ -10,7 +10,7 @@ const helpers = {
 	},
 
 	pushToken: (token) => {
-		axios.post("/api/sendMessage",
+		axios.post("/sendMessage",
 		{
 			token: token
 		});

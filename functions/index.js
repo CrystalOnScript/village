@@ -1,69 +1,74 @@
-// Copyright 2017, Google, Inc.
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//    http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 'use strict';
 
-process.env.DEBUG = 'actions-on-google:*';
-const ActionsSdkApp = require('actions-on-google').ActionsSdkApp;
-const express = require('express');
-const bodyParser = require('body-parser');
-
-// Import the Firebase SDK for Google Cloud Functions.
 const functions = require('firebase-functions');
 
-const NO_INPUTS = ['I didn\'t hear that.', 'If you\'re still there, please repeat that.', 'See you next time.'];
+const firebase = require("firebase");
 
-const expressApp = express();
-expressApp.set('port', (process.env.PORT || 8080));
-expressApp.use(bodyParser.json({type: 'application/json'}));
+const admin = require("firebase-admin");
 
-expressApp.post('/', (request, response) => {
-  console.log('handle post');
+const config = {
+  apiKey: "AIzaSyD-np5USZAOXmA51TB8EmNcPPYCnffOmjI",
+  authDomain: "villageapp-6bbe4.firebaseapp.com",
+  databaseURL: "https://villageapp-6bbe4.firebaseio.com",
+  projectId: "villageapp-6bbe4",
+  storageBucket: "villageapp-6bbe4.appspot.com",
+  messagingSenderId: "955973472886"
+};
+firebase.initializeApp(config);
+
+const database = firebase.database();
+
+const serviceAccount = require("./villageSDK.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://villageapp-6bbe4.firebaseio.com",
 });
-// [END YourAction]
 
-exports.expressApp = functions.https.onRequest((req, res) => {
-  console.log("we are in weird export function thingy");
-  const app = new ActionsSdkApp({request: req, response: res});
+process.env.DEBUG = 'actions-on-google:*';
 
-  function mainIntent (app) {
-    console.log('mainIntent');
-    let inputPrompt = app.buildInputPrompt(false,
-    'Herald here to help. Do you need some milk, medicine, or ice?');
-    app.ask(inputPrompt);
+const Assistant = require('actions-on-google').ApiAiAssistant;
+
+const MILK = 'milk';
+
+exports.villageApp = functions.https.onRequest((req, res) => {
+
+  console.log("Village App request headers: " + JSON.stringify(req.headers));
+  console.log("Village APP request body: " + JSON.stringify(req.body));
+
+  const assistant = new Assistant({request: req, response: res});
+
+  let actionMap = new Map();
+  actionMap.set(MILK, milkHandler);
+  assistant.handleRequest(actionMap);
+
+  function milkHandler (assistant) {
+    const msg = "Contacting village now to get milk. Check back in 5 mins.";
+    assistant.tell(msg);
   }
+});
 
-  function getArgument (app) {
-    console.log('getArgument');
-    if (app.getArgument() === 'I need milk') {
-      app.tell("I'll reach out to the village to see if someone can get you milk. Reconnect wth me in 5 minutes.");
-    } else {
-      app.mappedInput = app.getArgument();
-    }
-  }
+exports.sendMessage = functions.https.onRequest((req, res) => {
+  var registrationToken = req.body.token;
 
-  function rawInput (app) {
-    console.log('rawInput');
-    if (app.getRawInput() === 'quit') {
-      app.tell('Goodbye!');
-    } else {
-      app.mappedInput = app.getRawInput();
-    }
-  }
+  // See the "Defining the message payload" section below for details
+  // on how to define a message payload.
+  var payload = {
+      notification: {
+        title: "Hi!",
+        body: "You sent this notification to yourself!"
+      }
+  };
 
-  const actionMap = new Map();
-  actionMap.set(app.StandardIntents.MAIN, mainIntent);
-  actionMap.set(app.StandardIntents.ASK_HELP, getArgument);
-  actionMap.set(app.StandardIntents.TEXT, rawInput);
-
-  app.handleRequest(actionMap);
+  // Send a message to the device corresponding to the provided
+  // registration token.
+  admin.messaging().sendToDevice(registrationToken, payload)
+    .then(function(response) {
+      // See the MessagingDevicesResponse reference documentation for
+      // the contents of response.
+      console.log("Successfully sent message:", response);
+    })
+    .catch(function(error) {
+      console.log("Error sending message:", error);
+    });
+});
