@@ -50,11 +50,13 @@ function sendPayload(tokenArray) {
   const payload = {
     data: {
       title: "Meggin needs milk",
-      body: "Can you get Meggin milk?",
-      actions: [
-        {yes: "Yes"},
-        {no: "No"}
-      ]  
+      notificationOptions: JSON.stringify({
+        body: "Can you get Meggin milk?",
+        actions: [
+          {yes: "Yes"},
+          {no: "No"}
+        ]
+      })
     }
   };
 
