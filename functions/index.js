@@ -47,10 +47,14 @@ function sendNotification(tokenArray) {
 
 function sendPayload(tokenArray) {
   
-  var payload = {
-    notification: {
+  const payload = {
+    data: {
       title: "Meggin needs milk",
-      body: "Can you get Meggin milk?"
+      body: "Can you get Meggin milk?",
+      actions: [
+        {action: "yes", title: "Yes"},
+        {action: "no", title: "No"}
+      ]
     }
   };
 
@@ -81,6 +85,9 @@ exports.villageApp = functions.https.onRequest((req, res) => {
     const msg = "Contacting village now to get milk. Check back in 5 mins.";
     assistant.tell(msg);
   }
+
+  // Todo: we may want to close of the function with a res.end();
+  // Need to be careful though of any asynchronous processing.
 });
 
 exports.sendMessage = functions.https.onRequest((req, res) => {
@@ -106,4 +113,7 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
     .catch(function(error) {
       console.log("Error sending message:", error);
     });
+
+  // Todo: we may want to close off the function with a res.end().
+  // Need to be careful though of any asynchronous processing.
 });

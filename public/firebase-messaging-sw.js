@@ -25,8 +25,35 @@ messaging.setBackgroundMessageHandler(function(payload) {
   const notificationTitle = 'Background Message Title';
   const notificationOptions = {
     body: 'Background Message body.',
+    actions: [
+      {action: "yes", title: "Yes"},
+      {action: "no", title: "No"}
+    ]
   };
 
   return self.registration.showNotification(notificationTitle,
       notificationOptions);
+});
+
+self.addEventListener('notificationclick', function(event) {
+    event.notification.close();
+
+    const myPromise = new Promise(function(resolve, reject) {
+
+      console.log("User clicked action on notification.");
+
+    // Once finished, call resolve() or  reject().
+    resolve();
+  });
+
+  event.waitUntil(myPromise);
+
+  // Do something as the result of the notification click
+});
+
+self.addEventListener('notificationclose', function(event) {
+  // Do something as the result of the notification close
+
+  console.log("User closed notification");
+
 });
