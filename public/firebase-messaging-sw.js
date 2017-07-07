@@ -22,16 +22,16 @@ const messaging = firebase.messaging();
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   // Customize notification here
-  const notificationTitle = 'Background Message Title';
+  const notificationTitle = 'Background title';
   const notificationOptions = {
     body: 'Background Message body.',
     actions: [
-      {action: "yes", title: "Yes"},
-      {action: "no", title: "No"}
+       {action: "yes", title: "Yes"},
+       {action: "no", title: "No"}
     ]
   };
 
-  return self.showNotification(payload.title, JSON.parse(payload.notificationOptions));
+  return self.registration.showNotification(payload.notificationTitle, JSON.parse(payload.notificationOptions);
 });
 
 self.addEventListener('notificationclick', function(event) {
