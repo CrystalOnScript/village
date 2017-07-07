@@ -14,22 +14,56 @@ const config = {
   storageBucket: "villageapp-6bbe4.appspot.com",
   messagingSenderId: "955973472886"
 };
+
 firebase.initializeApp(config);
 
 const database = firebase.database();
 
 const serviceAccount = require("./villageSDK.json");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://villageapp-6bbe4.firebaseio.com",
-});
+const credential = admin.credential.cert(serviceAccount);
+
+admin.initializeApp(functions.config().firebase);
 
 process.env.DEBUG = 'actions-on-google:*';
 
 const Assistant = require('actions-on-google').ApiAiAssistant;
 
 const MILK = 'milk';
+
+const tokenArray = [];
+
+function sendNotification(tokenArray) {
+    console.log("We are calling send notification!");
+    admin.database().ref("testvillage/").once("value", function(snapshot){
+      snapshot.forEach(function(childSnapshot) {
+        var item = childSnapshot.val().token;
+        tokenArray.push(item);
+      })
+      console.log("We have an array of tokens: " + tokenArray);
+      sendPayload(tokenArray)
+    })
+}
+
+function sendPayload(tokenArray) {
+  
+  var payload = {
+    notification: {
+      title: "Meggin needs milk",
+      body: "Can you get Meggin milk?"
+    }
+  };
+
+  admin.messaging().sendToDevice(tokenArray, payload)
+    .then(function(response) {
+      // See the MessagingDevicesResponse reference documentation for
+      // the contents of response.
+      console.log("Successfully sent message:", response);
+    })
+    .catch(function(error) {
+      console.log("Error sending message:", error);
+    });
+}
 
 exports.villageApp = functions.https.onRequest((req, res) => {
 
@@ -43,6 +77,7 @@ exports.villageApp = functions.https.onRequest((req, res) => {
   assistant.handleRequest(actionMap);
 
   function milkHandler (assistant) {
+    sendNotification(tokenArray);
     const msg = "Contacting village now to get milk. Check back in 5 mins.";
     assistant.tell(msg);
   }
