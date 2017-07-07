@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import helpers from "./utils/helpers";
+import Search from "./children/Search"
 
 // Initialize Firebase
 var config = {
@@ -35,9 +36,11 @@ class Login extends Component {
           let lout = document.getElementById("logoutButton");
           lout.classList.remove("hide")
           let err = "Welcome, " + user.displayName;
+          let userId = "Your ID is " + user.uid ;
           let successful = "You are successfully logged in with Google."
           this.setState({
             err: err,
+            userId: userId,
             successful: successful,
           });
         //User isn't authenticated.
@@ -84,10 +87,16 @@ class Login extends Component {
         firebase.database().ref("users/"+user.uid).set({
           email: user.email,
           name: user.displayName,
-          token: FBtoken
+          token: FBtoken,
+          village: {
+            title: user.displayName + "'s Village",
+            tokens: FBtoken,
+          },
         });
-        let err = "Welcome, " + user.displayName
+        let err = "Welcome, " + user.displayName ;
+        let userId = "Your ID is " + user.uid ;
         this.setState({err: err});
+        this.setState({userId: userId});
     })
     .catch(function(err) {
       console.log('Error occurred in push', err);
@@ -136,19 +145,69 @@ class Login extends Component {
     })
   }
 
+  setSearch(search){
+    this.setState({ search: search })
+  }
+
+  searchFirebase(search){
+    var self = this;
+    const user = firebase.auth().currentUser;
+    firebase.database().ref("users/"+user.uid).on("value", function(snapshot){
+      const token = snapshot.val().token
+      console.log(token);
+
+
+      let searchTerm = search.trim();
+      return firebase.database().ref('/users/' + searchTerm + "/village").once('value', function(snapshot) {
+      console.log(snapshot.val())
+        if(snapshot.val() != null){
+          let villageName = "You found " + snapshot.val().title;
+          self.setState({
+            villageName: villageName,
+            userToken: token,
+            userSearch: searchTerm,
+           });
+          let addButton = "Sub to Village"
+          self.setState({ addButton: addButton })
+        }else{
+          self.setState({ villageName: "Sorry, no Villages found"})
+        }
+      });
+    })
+  }
+
+  addToken(){
+    console.log(this.state.userToken)
+    console.log(this.state.userSearch)
+    let searchTerm = this.state.userSearch;
+    let token = this.state.userToken;
+    firebase.database().ref('/users/' + searchTerm + "/village/tokens").push(token);
+  }
+
+
+
   constructor(props){
     super(props);
 
     this.state = {
       err: '',
+      userId: ' ',
       successful: ' ',
+      search: ' ',
+      villageName: ' ',
+      addButton: ' ',
+      userToken: ' ',
+      userSearch: ' ',
     };
 
-    this.logout = this.logout.bind(this);
-    this.google = this.google.bind(this);
-    this.sendPush = this.sendPush.bind(this);
-    this.subToTest = this.subToTest.bind(this);
-    this.pullData = this.pullData.bind(this);
+    this.logout         = this.logout.bind(this);
+    this.google         = this.google.bind(this);
+    this.sendPush       = this.sendPush.bind(this);
+    this.subToTest      = this.subToTest.bind(this);
+    this.pullData       = this.pullData.bind(this);
+    this.setSearch      = this.setSearch.bind(this);
+    this.searchFirebase = this.searchFirebase.bind(this);
+    this.addToken       = this.addToken.bind(this);
   };
 
 
@@ -157,6 +216,7 @@ class Login extends Component {
       <div>
 
         <p>{this.state.err}</p>
+        <p>{this.state.userId}</p>
         <p>{this.state.successful}</p>
         <button onClick={this.logout} id="logoutButton" className="hide">Log Out</button>
         <br />
@@ -167,6 +227,11 @@ class Login extends Component {
         <button onClick={this.subToTest}>Sub To Test Village</button>
         <br />
         <button onClick={this.pullData}>Send Push to TestVillage</button>
+        <br />
+        <br />
+        <p>{this.state.villageName}</p>
+        <button onClick={this.addToken}>{this.state.addButton}</button>
+        <Search setSearch={this.setSearch} searchFirebase={this.searchFirebase}/>
       </div>
     );
   }
