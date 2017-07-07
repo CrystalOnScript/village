@@ -51,8 +51,10 @@ function sendPayload(tokenArray) {
     data: {
       title: "Meggin needs milk",
       body: "Can you get Meggin milk?",
-      yes: "Yes"
-      no: "No"
+      actions: [
+        {yes: "Yes"},
+        {no: "No"}
+      ]  
     }
   };
 
