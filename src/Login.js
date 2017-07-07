@@ -184,6 +184,18 @@ class Login extends Component {
     firebase.database().ref('/users/' + searchTerm + "/village/tokens").push(token);
   }
 
+  pushToMyVillage(){
+    const user = firebase.auth().currentUser;
+    console.log(user.uid)
+    firebase.database().ref("users/"+user.uid+"/village/tokens").once("value", function(snapshot){
+      snapshot.forEach(function(childSnapshot) {
+        var item = childSnapshot.val();
+        helpers.pushToVillage(item);
+        console.log(item);
+        })
+    })
+  }
+
 
 
   constructor(props){
@@ -208,6 +220,7 @@ class Login extends Component {
     this.setSearch      = this.setSearch.bind(this);
     this.searchFirebase = this.searchFirebase.bind(this);
     this.addToken       = this.addToken.bind(this);
+    this.pushToMyVillage= this.pushToMyVillage.bind(this);
   };
 
 
@@ -218,6 +231,8 @@ class Login extends Component {
         <p>{this.state.err}</p>
         <p>{this.state.userId}</p>
         <p>{this.state.successful}</p>
+        <button onClick={this.pushToMyVillage}>Push To Your Village</button>
+        <br />
         <button onClick={this.logout} id="logoutButton" className="hide">Log Out</button>
         <br />
         <button onClick={this.google} id="googleBtn">Login With Google</button>
