@@ -44,11 +44,26 @@ messaging.setBackgroundMessageHandler(function(payload) {
 });
 
 self.addEventListener('notificationclick', function(event) {
+    
     event.notification.close();
 
     const myPromise = new Promise(function(resolve, reject) {
 
-      console.log("User clicked action on notification.");
+      if (!event.action) {
+
+        // Was normal notificaiton click
+        console.log("User clicked notification but didn't answer.");
+
+      } else if (event.action === 'yes') {
+
+        console.log("User said yes.");
+      } else if (event.action === 'no') {
+
+        console.log("User said no.");
+      } else {
+
+        console.log("Unknown action clicked: '$event.action'");
+      }
 
     // Once finished, call resolve() or  reject().
     resolve();
@@ -59,9 +74,5 @@ self.addEventListener('notificationclick', function(event) {
   // Do something as the result of the notification click
 });
 
-self.addEventListener('notificationclose', function(event) {
-  // Do something as the result of the notification close
+self.addEventListener('notificationclose', e => console.log("User closed notification " + e.notification));
 
-  console.log("User closed notification");
-
-});
