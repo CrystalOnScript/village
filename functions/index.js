@@ -48,10 +48,8 @@ function sendNotification(tokenArray) {
 function sendPayload(tokenArray) {
   
   const payload = {
-    notification: {
-      title: "Meggin needs a drink",
-      body: "Can you get Meggin a bottle of white wine?",
-      data: JSON.stringify([{action: 'yes', title: 'Yes'},{action: 'no', title: 'No'}])
+    "data": {
+      "jsondata": "{\"body\":\"Meggin needs help\", \"title\":\"Can you help her make the code work?\",\"actions\": [{\"action\":\"yes\", \"title\":\"Yes\"},{\"action\":\"no\",\"title\":\"No\"}]}"
     }
   };
 
