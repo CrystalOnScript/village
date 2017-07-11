@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import helpers from "./utils/helpers";
-import Search from "./children/Search"
+import Search from "./children/Search";
+import Chat from "./children/Chat";
 
 // Initialize Firebase
 var config = {
@@ -94,9 +95,7 @@ class Login extends Component {
           },
         });
         let err = "Welcome, " + user.displayName ;
-        let userId = "Your ID is " + user.uid ;
         this.setState({err: err});
-        this.setState({userId: userId});
     })
     .catch(function(err) {
       console.log('Error occurred in push', err);
@@ -203,7 +202,6 @@ class Login extends Component {
 
     this.state = {
       err: '',
-      userId: ' ',
       successful: ' ',
       search: ' ',
       villageName: ' ',
@@ -247,6 +245,9 @@ class Login extends Component {
         <p>{this.state.villageName}</p>
         <button onClick={this.addToken}>{this.state.addButton}</button>
         <Search setSearch={this.setSearch} searchFirebase={this.searchFirebase}/>
+        <br />
+        <br />
+        <Chat/>
       </div>
     );
   }
