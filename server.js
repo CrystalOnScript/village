@@ -8,6 +8,16 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const firebase = require("firebase");
 const admin = require("firebase-admin");
+const expressApp = express();
+var http = require('http').Server(expressApp);
+var io = require('socket.io')(http);
+
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+
+
 
 const MILK = 'milk';
 
@@ -30,7 +40,7 @@ admin.initializeApp({
   databaseURL: "https://villageapp-6bbe4.firebaseio.com"
 });
 // Include Server Dependencies
-const expressApp = express();
+
 // Sets an initial port.
 const PORT = process.env.PORT || 8080;
 

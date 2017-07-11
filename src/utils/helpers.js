@@ -8,6 +8,13 @@ const helpers = {
 		{
 			token: token
 		});
+	},
+
+	pushToVillage: (token) => {
+		axios.post("/api/sendMessage",
+		{
+			token: token
+		});
 	}
 }
 
