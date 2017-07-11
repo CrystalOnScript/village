@@ -1,11 +1,12 @@
 'use strict';
 
-const functions = require('firebase-functions');
+//const firebase = require("firebase");
 
-const firebase = require("firebase");
+const functions = require('firebase-functions');
 
 const admin = require("firebase-admin");
 
+/*
 const config = {
   apiKey: "AIzaSyD-np5USZAOXmA51TB8EmNcPPYCnffOmjI",
   authDomain: "villageapp-6bbe4.firebaseapp.com",
@@ -14,14 +15,12 @@ const config = {
   storageBucket: "villageapp-6bbe4.appspot.com",
   messagingSenderId: "955973472886"
 };
-
 firebase.initializeApp(config);
+*/
 
-const database = firebase.database();
+//const serviceAccount = require("./villageSDK.json");
 
-const serviceAccount = require("./villageSDK.json");
-
-const credential = admin.credential.cert(serviceAccount);
+//const credential = admin.credential.cert(serviceAccount);
 
 admin.initializeApp(functions.config().firebase);
 
@@ -33,17 +32,39 @@ const MILK = 'milk';
 
 const tokenArray = [];
 
-function sendNotification(tokenArray) {
-    console.log("We are calling send notification!");
-    admin.database().ref("testvillage/").once("value", function(snapshot){
-      snapshot.forEach(function(childSnapshot) {
-        var item = childSnapshot.val().token;
-        tokenArray.push(item);
-      })
-      console.log("We have an array of tokens: " + tokenArray);
-      sendPayload(tokenArray)
+function writeNewAction(tokenArray, msg) {
+
+  admin.database().ref("testvillage/").once("value", function(snapshot){
+    snapshot.forEach(function(childSnapshot) {
+      var item = childSnapshot.val().token;
+      tokenArray.push(item);
     })
+
+    console.log("We have an array of tokens: " + tokenArray);
+
+      const possibleResponses = tokenArray.length;
+      const title = msg;
+
+      admin.database().ref("/actions").push({
+        actionTitle: title,
+        responseTotal: possibleResponses,
+        yesResponses: 0,
+        noResponses: 0,
+        closedNotification: 0,
+        otherResponses: 0
+      });
+  }).then(() => {
+      console.log("We have an array of tokens for sending payload after actions write: " + tokenArray);
+      sendPayload(tokenArray);      
+  });
 }
+
+  //var newActionKey = firebase.database().ref().child('actions').push().key;
+
+  //var updates = {};
+  //updates['/actions/' + newActionKey] = actionData;
+
+  //return firebase.database().ref().update(updates);
 
 function sendPayload(tokenArray) {
   
@@ -67,7 +88,7 @@ function sendPayload(tokenArray) {
 exports.villageApp = functions.https.onRequest((req, res) => {
 
   console.log("Village App request headers: " + JSON.stringify(req.headers));
-  console.log("Village APP request body: " + JSON.stringify(req.body));
+  console.log("Village App request body: " + JSON.stringify(req.body));
 
   const assistant = new Assistant({request: req, response: res});
 
@@ -76,11 +97,11 @@ exports.villageApp = functions.https.onRequest((req, res) => {
   assistant.handleRequest(actionMap);
 
   function milkHandler (assistant) {
-    sendNotification(tokenArray);
     const msg = "Contacting village now to get milk. Check back in 5 mins.";
+    writeNewAction(tokenArray, msg);
+    //sendNotification(tokenArray);
     assistant.tell(msg);
   }
-
   // Todo: we may want to close of the function with a res.end();
   // Need to be careful though of any asynchronous processing.
 });
