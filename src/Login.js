@@ -4,7 +4,7 @@ import helpers from "./utils/helpers";
 // import Search from "./children/Search";
 import Chat from "./children/Chat";
 import Nav from "./children/Nav";
-
+import Create from "./children/Create"
 // Initialize Firebase
 var config = {
   apiKey: "AIzaSyD-np5USZAOXmA51TB8EmNcPPYCnffOmjI",
@@ -184,6 +184,11 @@ class Login extends Component {
     firebase.database().ref('/users/' + searchTerm + "/village/tokens").push(token);
   }
 
+    activeCreate(){
+      const create = document.getElementById("createDiv")
+      create.classList.remove("hide");
+    }
+
   // pushToMyVillage(){
   //   const user = firebase.auth().currentUser;
   //   console.log(user.uid)
@@ -209,7 +214,6 @@ class Login extends Component {
       addButton: ' ',
       userToken: ' ',
       userSearch: ' ',
-      showChat: false,
     };
 
     this.logout         = this.logout.bind(this);
@@ -220,25 +224,24 @@ class Login extends Component {
     this.setSearch      = this.setSearch.bind(this);
     this.searchFirebase = this.searchFirebase.bind(this);
     this.addToken       = this.addToken.bind(this);
+    this.activeCreate   = this.activeCreate.bind(this);
     // this.pushToMyVillage= this.pushToMyVillage.bind(this);
   };
 
 
   render(){
-    let chat = null ;
-    if(this.state.showChat === true){
-      chat =   <Chat />
-    }
+
     return(
       <div>
-        <Nav logout={this.logout} login={this.google}/>
+        <Nav logout={this.logout} login={this.google} activeCreate={this.activeCreate}/>
         <p>{this.state.err}</p>
         <p>{this.state.userId}</p>
         <p>{this.state.successful}</p>
+        <br />
 
-        {chat}
         {/* <button onClick={this.pushToMyVillage}>Push To Your Village</button> */}
-
+        <Create />
+        <Chat />
         <br />
         <button onClick={this.sendPush}>Push Notification</button>
         <br />
