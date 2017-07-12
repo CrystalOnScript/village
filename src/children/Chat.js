@@ -86,7 +86,7 @@ componentDidUpdate() {
   render(){
 
     return(
-      <div className="messageCom">
+      <div className="messageCom hide">
 
             <div className="messagesList scroll" id="messageBox" >
                {this.state.messages.map(function(each){
