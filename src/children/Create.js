@@ -23,19 +23,23 @@ class Create extends Component {
           console.log(self.state.userToken)
           // TODO test this data with subbing to villages
           let villageData = {
+            village: {
             villageName: villageName,
-            villageRuler: user.uid,
             subscribedUsers: {
-              user: {
                 userId: user.uid,
                 token: self.state.userToken
-              }
             }
           }
+        }
+        // Get a key for a new Post.
+        let newVillageKey = firebase.database().ref().child("villages").push().key;
 
-          const villageRef = firebase.database().ref("villages/");
+        // Write the new post's data simultaneously in the posts list and the user's post list.
+        let updates = {};
+        updates['/villages/' + newVillageKey] = villageData;
 
-          villageRef.push(villageData)
+        return firebase.database().ref().update(updates);
+
           let newName = self.state.villageName
           self.setState({
             successfulCreate: "Thanks! You created village " +newName,

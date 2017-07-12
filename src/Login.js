@@ -5,14 +5,15 @@ import helpers from "./utils/helpers";
 import Chat from "./children/Chat";
 import Nav from "./children/Nav";
 import Create from "./children/Create"
+import Join from "./children/Join"
 // Initialize Firebase
-var config = {
-  apiKey: "AIzaSyD-np5USZAOXmA51TB8EmNcPPYCnffOmjI",
-  authDomain: "villageapp-6bbe4.firebaseapp.com",
-  databaseURL: "https://villageapp-6bbe4.firebaseio.com",
-  projectId: "villageapp-6bbe4",
-  storageBucket: "villageapp-6bbe4.appspot.com",
-  messagingSenderId: "955973472886"
+const config = {
+  apiKey: "AIzaSyCCE0oLJcgSsOh6O7JMShwbeNs1lpL3YFY",
+  authDomain: "villageherald-9jl.firebaseapp.com",
+  databaseURL: "https://villageherald-9jl.firebaseio.com",
+  projectId: "villageherald-9jl",
+  storageBucket: "villageherald-9jl.appspot.com",
+  messagingSenderId: "973758092658"
 };
 firebase.initializeApp(config);
 
@@ -186,7 +187,16 @@ class Login extends Component {
 
     activeCreate(){
       const create = document.getElementById("createDiv")
+      const landing = document.getElementById("landingDiv")
       create.classList.remove("hide");
+      landing.classList.add("hide");
+    }
+
+    homePage(){
+      const create = document.getElementById("createDiv")
+      const landing = document.getElementById("landingDiv")
+      landing.classList.remove("hide");
+      create.classList.add("hide");
     }
 
   // pushToMyVillage(){
@@ -224,6 +234,7 @@ class Login extends Component {
     this.setSearch      = this.setSearch.bind(this);
     this.searchFirebase = this.searchFirebase.bind(this);
     this.addToken       = this.addToken.bind(this);
+    this.homePage       = this.homePage.bind(this);
     this.activeCreate   = this.activeCreate.bind(this);
     // this.pushToMyVillage= this.pushToMyVillage.bind(this);
   };
@@ -233,7 +244,9 @@ class Login extends Component {
 
     return(
       <div>
-        <Nav logout={this.logout} login={this.google} activeCreate={this.activeCreate}/>
+
+        <Nav logout={this.logout} login={this.google} activeCreate={this.activeCreate} goHome={this.homePage}/>
+                <Join />
         <p>{this.state.err}</p>
         <p>{this.state.userId}</p>
         <p>{this.state.successful}</p>
@@ -243,7 +256,7 @@ class Login extends Component {
         <Create />
         <Chat />
         <br />
-        <button onClick={this.sendPush}>Push Notification</button>
+        {/* <button onClick={this.sendPush}>Push Notification</button>
         <br />
         <button onClick={this.subToTest}>Sub To Test Village</button>
         <br />
@@ -252,9 +265,9 @@ class Login extends Component {
         <br />
         <p>{this.state.villageName}</p>
         <button onClick={this.addToken}>{this.state.addButton}</button>
-        {/* <Search setSearch={this.setSearch} searchFirebase={this.searchFirebase}/> */}
+        <Search setSearch={this.setSearch} searchFirebase={this.searchFirebase}/>
         <br />
-        <br />
+        <br /> */}
 
       </div>
     );

@@ -22,12 +22,12 @@ io.on('connection', function(socket){
 const MILK = 'milk';
 
 const config = {
-  apiKey: "AIzaSyD-np5USZAOXmA51TB8EmNcPPYCnffOmjI",
-  authDomain: "villageapp-6bbe4.firebaseapp.com",
-  databaseURL: "https://villageapp-6bbe4.firebaseio.com",
-  projectId: "villageapp-6bbe4",
-  storageBucket: "villageapp-6bbe4.appspot.com",
-  messagingSenderId: "955973472886"
+  apiKey: "AIzaSyCCE0oLJcgSsOh6O7JMShwbeNs1lpL3YFY",
+  authDomain: "villageherald-9jl.firebaseapp.com",
+  databaseURL: "https://villageherald-9jl.firebaseio.com",
+  projectId: "villageherald-9jl",
+  storageBucket: "villageherald-9jl.appspot.com",
+  messagingSenderId: "973758092658"
 };
 firebase.initializeApp(config);
 
