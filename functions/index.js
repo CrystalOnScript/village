@@ -45,17 +45,24 @@ function writeNewAction(tokenArray, msg) {
       const possibleResponses = tokenArray.length;
       const title = msg;
 
-      admin.database().ref("/actions").push({
-        actionTitle: title,
-        responseTotal: possibleResponses,
-        yesResponses: 0,
-        noResponses: 0,
-        closedNotification: 0,
-        otherResponses: 0
-      });
-  }).then(() => {
-      console.log("We have an array of tokens for sending payload after actions write: " + tokenArray);
-      sendPayload(tokenArray);      
+      admin.database()
+        .ref("/actions")
+        .push({
+          actionTitle: title,
+          responseTotal: possibleResponses,
+          yesResponses: 0,
+          noResponses: 0,
+          closedNotification: 0,
+          otherResponses: 0
+      })
+      .then((snap) => {
+        const key = snap.key;
+
+        console.log("We have tokens to send to payload: " + tokenArray);
+        console.log("We have a key to send to payload: " + key);
+
+        sendPayload(tokenArray, key); 
+      })  
   });
 }
 
@@ -66,10 +73,15 @@ function writeNewAction(tokenArray, msg) {
 
   //return firebase.database().ref().update(updates);
 
-function sendPayload(tokenArray) {
+function sendPayload(tokenArray, key) {
+
+  console.log("We have an action key to pass as data to payload: " + key);
+
+  const keyString = key.toString();
   
   const payload = {
     "data": {
+      "actionID": keyString,
       "jsondata": "{\"body\":\"Meggin needs help\", \"title\":\"Can you help her make the code work?\",\"actions\": [{\"action\":\"yes\", \"title\":\"Yes\"},{\"action\":\"no\",\"title\":\"No\"}]}"
     }
   };
