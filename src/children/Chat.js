@@ -4,25 +4,6 @@ import firebase from 'firebase';
 
 class Chat extends Component {
 
-  componentDidUpdate(){
-    const user = firebase.auth().currentUser;
-    let messages = firebase.database().ref("testvillage/messages");
-    messages.on('value', function(snapshot) {
-      snapshot.forEach(function(childSnapshot) {
-        var item = childSnapshot.val();
-        var chatBox = document.getElementById("chatBox")
-        console.log(item.username)
-        console.log(item.chat);
-        chatBox.append(item.chat)
-        chatBox.append(item.username)
-        })
-    });
-  }
-  logUser(){
-    const user = firebase.auth().currentUser;
-    console.log(user)
-  }
-
   writeChat() {
       var self = this;
       const user = firebase.auth().currentUser;
@@ -52,15 +33,50 @@ class Chat extends Component {
     console.log(this.state.chat)
   }
 
+  updateScroll(){
+    var element = document.getElementById("messageBox");
+    element.scrollTop = element.scrollHeight;
+  }
+
+  scrollToBottom = () => {
+     const messagesContainer = document.getElementById("messageBox")
+     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+ };
+
+ componentDidMount() {
+    this.scrollToBottom();
+}
+
+componentDidUpdate() {
+    this.scrollToBottom();
+}
+
   constructor(props){
     super(props);
 
     this.state = {
       chat: ' ',
+      messages: [],
     };
-    this.logUser = this.logUser.bind(this);
+    firebase.database().ref('testvillage/messages').on('value', function(snapshot){
+       let self = this
+       let messages = [ ]
+        if(snapshot.val() != null){
+          snapshot.forEach(function(childSnapshot) {
+          console.log(childSnapshot.val())
+          messages.push(childSnapshot.val())
+          })
+          self.setState({messages: messages})
+          console.log(self.state.messages)
+        }else{
+          console.log('no messages yet')
+        }
+
+      }.bind(this));
     this.writeChat = this.writeChat.bind(this);
     this.chatChange = this.chatChange.bind(this);
+    this.updateScroll = this.updateScroll.bind(this);
+    this.scrollToBottom = this.scrollToBottom.bind(this);
   }
 
 
@@ -68,17 +84,23 @@ class Chat extends Component {
 
 
   render(){
+
     return(
-      <div>
-        <button onClick={this.logUser}>click</button>
-        <br />
-          <div id="chatBox">
+      <div className="messageCom">
 
-          </div>
-          <input value={this.state.chat} onChange={this.chatChange}></input>
+            <div className="messagesList scroll" id="messageBox" >
+               {this.state.messages.map(function(each){
+                      return <div>
+
+                        <p>{each.username}: <br />{each.chat}</p>
+                    </div>;
+               })}
+             </div>
+
+          <input value={this.state.chat} onChange={this.chatChange} className="inputBar"></input>
+
           <br />
-          <button onClick={this.writeChat}>Message</button>
-
+          <button onClick={this.writeChat} className="waves-effect waves-light btn #fbc02d yellow darken-2">Message</button>
       </div>
     );
   }

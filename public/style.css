@@ -2,3 +2,27 @@
 .hide{
   display: none;
 }
+
+.messagesList {
+  max-height: 200px;
+
+}
+
+.scroll {
+	overflow-y: scroll;
+}
+
+.messageCom {
+  max-width: 500px;
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
+
+.navLogo {
+  height: 60px;
+}
+
+.inputBar {
+  max-width: 200px;
+}
