@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import helpers from "./utils/helpers";
-import Search from "./children/Search";
+// import Search from "./children/Search";
 import Chat from "./children/Chat";
+import Nav from "./children/Nav";
 
 // Initialize Firebase
 var config = {
@@ -41,6 +42,7 @@ class Login extends Component {
           this.setState({
             err: err,
             successful: successful,
+            showChat: true,
           });
         //User isn't authenticated.
         } else {
@@ -62,6 +64,7 @@ class Login extends Component {
     this.setState({
       err: err,
       successful: successful,
+      showChat: false,
     });
   }
 
@@ -181,17 +184,17 @@ class Login extends Component {
     firebase.database().ref('/users/' + searchTerm + "/village/tokens").push(token);
   }
 
-  pushToMyVillage(){
-    const user = firebase.auth().currentUser;
-    console.log(user.uid)
-    firebase.database().ref("users/"+user.uid+"/village/tokens").once("value", function(snapshot){
-      snapshot.forEach(function(childSnapshot) {
-        var item = childSnapshot.val();
-        helpers.pushToVillage(item);
-        console.log(item);
-        })
-    })
-  }
+  // pushToMyVillage(){
+  //   const user = firebase.auth().currentUser;
+  //   console.log(user.uid)
+  //   firebase.database().ref("users/"+user.uid+"/village/tokens").once("value", function(snapshot){
+  //     snapshot.forEach(function(childSnapshot) {
+  //       var item = childSnapshot.val();
+  //       helpers.pushToVillage(item);
+  //       console.log(item);
+  //       })
+  //   })
+  // }
 
 
 
@@ -217,22 +220,25 @@ class Login extends Component {
     this.setSearch      = this.setSearch.bind(this);
     this.searchFirebase = this.searchFirebase.bind(this);
     this.addToken       = this.addToken.bind(this);
-    this.pushToMyVillage= this.pushToMyVillage.bind(this);
+    // this.pushToMyVillage= this.pushToMyVillage.bind(this);
   };
 
 
   render(){
+    let chat = null ;
+    if(this.state.showChat === true){
+      chat =   <Chat />
+    }
     return(
       <div>
-
+        <Nav logout={this.logout} login={this.google}/>
         <p>{this.state.err}</p>
         <p>{this.state.userId}</p>
         <p>{this.state.successful}</p>
-        <button onClick={this.pushToMyVillage}>Push To Your Village</button>
-        <br />
-        <button onClick={this.logout} id="logoutButton" className="hide">Log Out</button>
-        <br />
-        <button onClick={this.google} id="googleBtn">Login With Google</button>
+
+        {chat}
+        {/* <button onClick={this.pushToMyVillage}>Push To Your Village</button> */}
+
         <br />
         <button onClick={this.sendPush}>Push Notification</button>
         <br />
@@ -243,10 +249,10 @@ class Login extends Component {
         <br />
         <p>{this.state.villageName}</p>
         <button onClick={this.addToken}>{this.state.addButton}</button>
-        <Search setSearch={this.setSearch} searchFirebase={this.searchFirebase}/>
+        {/* <Search setSearch={this.setSearch} searchFirebase={this.searchFirebase}/> */}
         <br />
         <br />
-        <Chat />
+
       </div>
     );
   }

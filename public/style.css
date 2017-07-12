@@ -4,7 +4,7 @@
 }
 
 .messagesList {
-  max-height: 300px;
+  max-height: 200px;
 
 }
 
@@ -13,5 +13,16 @@
 }
 
 .messageCom {
-  width: 500px;
+  max-width: 500px;
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
+
+.navLogo {
+  height: 60px;
+}
+
+.inputBar {
+  max-width: 200px;
 }

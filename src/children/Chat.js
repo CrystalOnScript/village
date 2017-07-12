@@ -33,6 +33,24 @@ class Chat extends Component {
     console.log(this.state.chat)
   }
 
+  updateScroll(){
+    var element = document.getElementById("messageBox");
+    element.scrollTop = element.scrollHeight;
+  }
+
+  scrollToBottom = () => {
+     const messagesContainer = document.getElementById("messageBox")
+     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+ };
+
+ componentDidMount() {
+    this.scrollToBottom();
+}
+
+componentDidUpdate() {
+    this.scrollToBottom();
+}
+
   constructor(props){
     super(props);
 
@@ -57,6 +75,8 @@ class Chat extends Component {
       }.bind(this));
     this.writeChat = this.writeChat.bind(this);
     this.chatChange = this.chatChange.bind(this);
+    this.updateScroll = this.updateScroll.bind(this);
+    this.scrollToBottom = this.scrollToBottom.bind(this);
   }
 
 
@@ -68,19 +88,19 @@ class Chat extends Component {
     return(
       <div className="messageCom">
 
-        <br />
-            <div className="messagesList scroll">
+            <div className="messagesList scroll" id="messageBox" >
                {this.state.messages.map(function(each){
                       return <div>
-                        <hr />
+
                         <p>{each.username}: <br />{each.chat}</p>
-                      <hr /></div>;
+                    </div>;
                })}
              </div>
 
-          <input value={this.state.chat} onChange={this.chatChange}></input>
+          <input value={this.state.chat} onChange={this.chatChange} className="inputBar"></input>
+
           <br />
-          <button onClick={this.writeChat}>Message</button>
+          <button onClick={this.writeChat} className="waves-effect waves-light btn #fbc02d yellow darken-2">Message</button>
       </div>
     );
   }
