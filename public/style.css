@@ -2,3 +2,16 @@
 .hide{
   display: none;
 }
+
+.messagesList {
+  max-height: 300px;
+
+}
+
+.scroll {
+	overflow-y: scroll;
+}
+
+.messageCom {
+  width: 500px;
+}

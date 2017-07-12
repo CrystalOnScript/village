@@ -37,11 +37,9 @@ class Login extends Component {
           let lout = document.getElementById("logoutButton");
           lout.classList.remove("hide")
           let err = "Welcome, " + user.displayName;
-          let userId = "Your ID is " + user.uid ;
           let successful = "You are successfully logged in with Google."
           this.setState({
             err: err,
-            userId: userId,
             successful: successful,
           });
         //User isn't authenticated.
@@ -208,6 +206,7 @@ class Login extends Component {
       addButton: ' ',
       userToken: ' ',
       userSearch: ' ',
+      showChat: false,
     };
 
     this.logout         = this.logout.bind(this);
@@ -247,7 +246,7 @@ class Login extends Component {
         <Search setSearch={this.setSearch} searchFirebase={this.searchFirebase}/>
         <br />
         <br />
-        <Chat/>
+        <Chat />
       </div>
     );
   }
