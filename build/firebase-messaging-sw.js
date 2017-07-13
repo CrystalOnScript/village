@@ -29,11 +29,15 @@ messaging.setBackgroundMessageHandler(function(payload) {
 
   console.log("What does the actions key look like? " + payload.data.actionID);
 
+  console.log("What does the needy user ID look like? " + payload.data.needyUserID);
+
   console.log("What does actions look like? " + parsedJSON.actions);
 
   console.log("What does title look like? " + parsedJSON.title);
 
   const actionID = (payload.data.actionID).toString();
+
+  const needyUserID = (payload.data.needyUserID).toString();
 
   const notificationTitle = parsedJSON.title;
 
@@ -46,7 +50,8 @@ messaging.setBackgroundMessageHandler(function(payload) {
     body: parsedBody,
     actions: parsedActions,
     data: {
-      actionRecord: actionID
+      actionRecord: actionID,
+      needyUserRecord: needyUserID
     }
   };
 
@@ -70,9 +75,13 @@ self.addEventListener('notificationclick', function(event) {
 
         const notificationData = event.notification.data.actionRecord;
 
-        console.log("And now we can read the action Record, I hope: " + notificationData);
+        const needyUserData = event.notification.data.needyUserRecord;
 
-        const databaseRef = db.ref('/actions/' + notificationData + '/yesResponses');
+        console.log("And now we can read the action record, I hope: " + notificationData);
+
+        console.log("And now we can read the needy user record, I hope: " + needyUserData);
+
+        const databaseRef = db.ref('/user-actions/' + needyUserData + '/actions/' + notificationData + '/yesResponses');
 
         databaseRef.transaction(function(currentYesCount) {
           return currentYesCount+1;

@@ -16,7 +16,9 @@ const UPDATE = 'update';
 
 const tokenArray = [];
 
-function writeNewAction(tokenArray, msg) {
+function writeNewAction(tokenArray, msg, needyUser) {
+
+  console.log("We are in write new action method with needy user: " + needyUser);
 
   admin.database().ref("testvillage/").once("value", function(snapshot){
     snapshot.forEach(function(childSnapshot) {
@@ -29,8 +31,10 @@ function writeNewAction(tokenArray, msg) {
       const possibleResponses = tokenArray.length;
       const title = msg;
 
+      const needyUserID = needyUser;
+
       admin.database()
-        .ref("/actions")
+        .ref("/user-actions/" + needyUserID + "/actions")
         .push({
           actionTitle: title,
           responseTotal: possibleResponses,
@@ -43,22 +47,25 @@ function writeNewAction(tokenArray, msg) {
         const key = snap.key;
 
         console.log("We have tokens to send to payload: " + tokenArray);
-        console.log("We have a key to send to payload: " + key);
+        console.log("We have a needy user ID and an action key to send to payload: " + needyUser + ", " + key);
 
-        sendPayload(tokenArray, key); 
+        sendPayload(tokenArray, key, needyUser); 
       })  
   });
 }
 
-function sendPayload(tokenArray, key) {
+function sendPayload(tokenArray, key, needyUser) {
 
-  console.log("We have an action key to pass as data to payload: " + key);
+  console.log("We have a needy user ID and action key to pass as data to payload: " + needyUser + ", " + key);
 
   const keyString = key.toString();
+
+  const needyUserString = needyUser.toString();
   
   const payload = {
     "data": {
       "actionID": keyString,
+      "needyUserID": needyUserString,
       "jsondata": "{\"body\":\"Meggin needs help\", \"title\":\"Can you help her make the code work?\",\"actions\": [{\"action\":\"yes\", \"title\":\"Yes\"},{\"action\":\"no\",\"title\":\"No\"}]}"
     }
   };
@@ -79,6 +86,9 @@ exports.villageApp = functions.https.onRequest((req, res) => {
   console.log("Village App request headers: " + JSON.stringify(req.headers));
   console.log("Village App request body: " + JSON.stringify(req.body));
 
+  console.log("Can I get at user ID, please, please, please? " + req.body.originalRequest.data.user.userId);
+
+  const needyUser = req.body.originalRequest.data.user.userId;
   const assistant = new Assistant({request: req, response: res});
 
   let actionMap = new Map();
@@ -88,7 +98,7 @@ exports.villageApp = functions.https.onRequest((req, res) => {
 
   function milkHandler (assistant) {
     const msg = "Contacting village now to get milk. Check back in 5 mins.";
-    writeNewAction(tokenArray, msg);
+    writeNewAction(tokenArray, msg, needyUser);
     assistant.tell(msg);
   }
 
