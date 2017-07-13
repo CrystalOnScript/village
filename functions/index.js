@@ -6,13 +6,13 @@ const firebase = require("firebase");
 
 const admin = require("firebase-admin");
 
-const config = {
-  apiKey: "AIzaSyCCE0oLJcgSsOh6O7JMShwbeNs1lpL3YFY",
-  authDomain: "villageherald-9jl.firebaseapp.com",
-  databaseURL: "https://villageherald-9jl.firebaseio.com",
-  projectId: "villageherald-9jl",
-  storageBucket: "villageherald-9jl.appspot.com",
-  messagingSenderId: "973758092658"
+var config = {
+  apiKey: "AIzaSyCDa28-IY2mrgw0SvUJ8AfqCs1Ca8BfWFY",
+  authDomain: "villageherald-e65.firebaseapp.com",
+  databaseURL: "https://villageherald-e65.firebaseio.com",
+  projectId: "villageherald-e65",
+  storageBucket: "villageherald-e65.appspot.com",
+  messagingSenderId: "980213325202"
 };
 firebase.initializeApp(config);
 
