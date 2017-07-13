@@ -1,26 +1,8 @@
 'use strict';
 
-//const firebase = require("firebase");
-
 const functions = require('firebase-functions');
 
 const admin = require("firebase-admin");
-
-/*
-const config = {
-  apiKey: "AIzaSyD-np5USZAOXmA51TB8EmNcPPYCnffOmjI",
-  authDomain: "villageapp-6bbe4.firebaseapp.com",
-  databaseURL: "https://villageapp-6bbe4.firebaseio.com",
-  projectId: "villageapp-6bbe4",
-  storageBucket: "villageapp-6bbe4.appspot.com",
-  messagingSenderId: "955973472886"
-};
-firebase.initializeApp(config);
-*/
-
-//const serviceAccount = require("./villageSDK.json");
-
-//const credential = admin.credential.cert(serviceAccount);
 
 admin.initializeApp(functions.config().firebase);
 
@@ -29,6 +11,8 @@ process.env.DEBUG = 'actions-on-google:*';
 const Assistant = require('actions-on-google').ApiAiAssistant;
 
 const MILK = 'milk';
+
+const UPDATE = 'update';
 
 const tokenArray = [];
 
@@ -66,13 +50,6 @@ function writeNewAction(tokenArray, msg) {
   });
 }
 
-  //var newActionKey = firebase.database().ref().child('actions').push().key;
-
-  //var updates = {};
-  //updates['/actions/' + newActionKey] = actionData;
-
-  //return firebase.database().ref().update(updates);
-
 function sendPayload(tokenArray, key) {
 
   console.log("We have an action key to pass as data to payload: " + key);
@@ -106,12 +83,19 @@ exports.villageApp = functions.https.onRequest((req, res) => {
 
   let actionMap = new Map();
   actionMap.set(MILK, milkHandler);
+  actionMap.set(UPDATE, updateHandler);
   assistant.handleRequest(actionMap);
 
   function milkHandler (assistant) {
     const msg = "Contacting village now to get milk. Check back in 5 mins.";
     writeNewAction(tokenArray, msg);
-    //sendNotification(tokenArray);
+    assistant.tell(msg);
+  }
+
+  function updateHandler (assistant) {
+    const msg = "Let's check on our responses now.";
+    // Todo: write function to check responses passing in action key.
+    // Todo: need to see how we can get the action key from the write new action function.
     assistant.tell(msg);
   }
   // Todo: we may want to close of the function with a res.end();
