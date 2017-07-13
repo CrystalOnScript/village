@@ -28,11 +28,16 @@
 }
 
 .logoFont {
-  /*font-family: 'Yellowtail', cursive;*/
+  /*font-family: 'Yellowtail', cursive;
   font-family: 'Courgette', cursive;
+  font-family: 'Kalam', cursive;
+  font-family: 'Merienda One', cursive;
+  font-family: 'Berkshire Swash', cursive;*/
+  font-family: 'Fondamento', cursive;
+  /*font-family: 'Redressed', cursive;*/
   font-size: 30px;
 }
 
 #helpLogo {
-  height: 50vh;
+  height: 40vh;
 }
