@@ -7,12 +7,12 @@ importScripts('https://www.gstatic.com/firebasejs/4.1.2/firebase-database.js');
 
 // Initialize Firebase
 var config = {
-  apiKey: "AIzaSyD-np5USZAOXmA51TB8EmNcPPYCnffOmjI",
-  authDomain: "villageapp-6bbe4.firebaseapp.com",
-  databaseURL: "https://villageapp-6bbe4.firebaseio.com",
-  projectId: "villageapp-6bbe4",
-  storageBucket: "villageapp-6bbe4.appspot.com",
-  messagingSenderId: "955973472886"
+  apiKey: "AIzaSyCDa28-IY2mrgw0SvUJ8AfqCs1Ca8BfWFY",
+  authDomain: "villageherald-e65.firebaseapp.com",
+  databaseURL: "https://villageherald-e65.firebaseio.com",
+  projectId: "villageherald-e65",
+  storageBucket: "villageherald-e65.appspot.com",
+  messagingSenderId: "980213325202"
 };
 firebase.initializeApp(config);
 

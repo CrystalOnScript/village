@@ -4,15 +4,16 @@ import helpers from "./utils/helpers";
 // import Search from "./children/Search";
 import Chat from "./children/Chat";
 import Nav from "./children/Nav";
-
+import Create from "./children/Create"
+import Join from "./children/Join"
 // Initialize Firebase
 var config = {
-  apiKey: "AIzaSyD-np5USZAOXmA51TB8EmNcPPYCnffOmjI",
-  authDomain: "villageapp-6bbe4.firebaseapp.com",
-  databaseURL: "https://villageapp-6bbe4.firebaseio.com",
-  projectId: "villageapp-6bbe4",
-  storageBucket: "villageapp-6bbe4.appspot.com",
-  messagingSenderId: "955973472886"
+  apiKey: "AIzaSyCDa28-IY2mrgw0SvUJ8AfqCs1Ca8BfWFY",
+  authDomain: "villageherald-e65.firebaseapp.com",
+  databaseURL: "https://villageherald-e65.firebaseio.com",
+  projectId: "villageherald-e65",
+  storageBucket: "villageherald-e65.appspot.com",
+  messagingSenderId: "980213325202"
 };
 firebase.initializeApp(config);
 
@@ -184,19 +185,19 @@ class Login extends Component {
     firebase.database().ref('/users/' + searchTerm + "/village/tokens").push(token);
   }
 
-  // pushToMyVillage(){
-  //   const user = firebase.auth().currentUser;
-  //   console.log(user.uid)
-  //   firebase.database().ref("users/"+user.uid+"/village/tokens").once("value", function(snapshot){
-  //     snapshot.forEach(function(childSnapshot) {
-  //       var item = childSnapshot.val();
-  //       helpers.pushToVillage(item);
-  //       console.log(item);
-  //       })
-  //   })
-  // }
+    activeCreate(){
+      const create = document.getElementById("createDiv")
+      const landing = document.getElementById("landingDiv")
+      create.classList.remove("hide");
+      landing.classList.add("hide");
+    }
 
-
+    homePage(){
+      const create = document.getElementById("createDiv")
+      const landing = document.getElementById("landingDiv")
+      landing.classList.remove("hide");
+      create.classList.add("hide");
+    }
 
   constructor(props){
     super(props);
@@ -209,7 +210,6 @@ class Login extends Component {
       addButton: ' ',
       userToken: ' ',
       userSearch: ' ',
-      showChat: false,
     };
 
     this.logout         = this.logout.bind(this);
@@ -220,38 +220,44 @@ class Login extends Component {
     this.setSearch      = this.setSearch.bind(this);
     this.searchFirebase = this.searchFirebase.bind(this);
     this.addToken       = this.addToken.bind(this);
+    this.homePage       = this.homePage.bind(this);
+    this.activeCreate   = this.activeCreate.bind(this);
     // this.pushToMyVillage= this.pushToMyVillage.bind(this);
   };
 
 
   render(){
-    let chat = null ;
-    if(this.state.showChat === true){
-      chat =   <Chat />
-    }
+
     return(
       <div>
-        <Nav logout={this.logout} login={this.google}/>
+
+        <Nav logout={this.logout} login={this.google} activeCreate={this.activeCreate} goHome={this.homePage}/>
+                <Join />
         <p>{this.state.err}</p>
         <p>{this.state.userId}</p>
         <p>{this.state.successful}</p>
+        <br />
 
-        {chat}
         {/* <button onClick={this.pushToMyVillage}>Push To Your Village</button> */}
+        <Create />
+        <Chat />
+
+        <button onClick={this.subToTest}>Sub To Test Village</button>
 
         <br />
-        <button onClick={this.sendPush}>Push Notification</button>
         <br />
-        <button onClick={this.subToTest}>Sub To Test Village</button>
+
+        {/* <button onClick={this.sendPush}>Push Notification</button>
+        <br />
         <br />
         <button onClick={this.pullData}>Send Push to TestVillage</button>
         <br />
         <br />
         <p>{this.state.villageName}</p>
         <button onClick={this.addToken}>{this.state.addButton}</button>
-        {/* <Search setSearch={this.setSearch} searchFirebase={this.searchFirebase}/> */}
+        <Search setSearch={this.setSearch} searchFirebase={this.searchFirebase}/>
         <br />
-        <br />
+        <br /> */}
 
       </div>
     );

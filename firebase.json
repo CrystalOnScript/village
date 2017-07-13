@@ -6,7 +6,8 @@
     "public": "build",
     "rewrites": [
       {
-        "source": "/sendMessage", "function": "sendMessage"
+        "source": "**",
+        "destination": "/index.html"
       }
     ]
   }
