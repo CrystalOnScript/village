@@ -3,51 +3,6 @@ import firebase from 'firebase';
 
 class Join extends Component {
 
-  createVillage(event) {
-      event.preventDefault()
-          let self = this;
-      const user = firebase.auth().currentUser;
-
-      if(user === null){
-        self.setState({ successfulCreate: "You must be logged in to create a village."})
-      }else{
-
-        const user = firebase.auth().currentUser;
-        let villageName = this.state.villageName
-        firebase.database().ref("users/"+ user.uid).once("value", function(snapshot){
-          let userToken = snapshot.val().token
-            self.setState({ userToken: userToken })
-
-        }).then(function(){
-          console.log(villageName)
-          console.log(self.state.userToken)
-          // TODO test this data with subbing to villages
-          let villageData = {
-            villageName: villageName,
-            villageRuler: user.uid,
-            subscribedUsers: {
-              user: {
-                userId: user.uid,
-                token: self.state.userToken
-              }
-            }
-          }
-
-          const villageRef = firebase.database().ref("villages/");
-
-          villageRef.push(villageData)
-          let newName = self.state.villageName
-          self.setState({
-            successfulCreate: "Thanks! You created village " +newName,
-            villageName: ' '
-           })
-        })
-
-    }
-
-
-}
-
   joinVillage(event){
     console.log(event.target.value)
     let key = event.target.value
@@ -59,9 +14,12 @@ class Join extends Component {
 
     }).then(()=>{
 
-      firebase.database().ref('villages/'+key +"/village/subscribedUsers").push({
+      firebase.database().ref('villages/'+key +"/subscribedUsers").push({
           userId: user.uid,
           token: self.state.userToken
+      })
+      firebase.database().ref('users/'+ user.uid +"/villageSubs").push({
+          villageKey: key,
       })
 
     })
@@ -77,7 +35,7 @@ class Join extends Component {
       villages: [],
       userToken: '',
     };
-    firebase.database().ref('villages').once('value', function(snapshot){
+    firebase.database().ref('villages').on('value', function(snapshot){
        let self = this
        let villages = [ ]
         if(snapshot.val() != null){
@@ -88,7 +46,7 @@ class Join extends Component {
           console.log(childSnapshot.key)
           let currentVillage = {
             key: childSnapshot.key,
-            name: childSnapshot.val().village.villageName
+            name: childSnapshot.val().villageName
           }
           villages.push(currentVillage)
           })
@@ -99,21 +57,19 @@ class Join extends Component {
         }
 
       }.bind(this));
-    this.createVillage = this.createVillage.bind(this);
     this.joinVillage = this.joinVillage.bind(this);
   }
 
 
   render() {
     return (
-      <div>
-        Hi there, join here!
-        <div>
+      <div className="hide" id="joinDiv">
+        <div >
            {this.state.villages.map( (each) => {
 
-           return <div>
+           return <div key={each.key}>
                     <p>{each.name}</p>
-                    <button value={each.key} onClick={this.joinVillage} className="waves-effect waves-light btn #fbc02d yellow darken-2">Join</button>
+                    <button value={each.key} key={each.key} onClick={this.joinVillage} className="waves-effect waves-light btn #fbc02d yellow darken-2">Join</button>
                 </div>;
            })}
          </div>

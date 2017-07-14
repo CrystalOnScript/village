@@ -188,14 +188,37 @@ class Login extends Component {
     activeCreate(){
       const create = document.getElementById("createDiv")
       const landing = document.getElementById("landingDiv")
+      const join = document.getElementById("joinDiv")
+      join.classList.add("hide");
       create.classList.remove("hide");
       landing.classList.add("hide");
+    }
+    activeJoin(){
+      const create = document.getElementById("createDiv")
+      const landing = document.getElementById("landingDiv")
+      const join = document.getElementById("joinDiv")
+      create.classList.add("hide");
+      landing.classList.add("hide");
+      join.classList.remove("hide");
+      console.log('clicked activeJoin')
     }
 
     homePage(){
       const create = document.getElementById("createDiv")
       const landing = document.getElementById("landingDiv")
+      const join = document.getElementById("joinDiv")
+      join.classList.add("hide");
       landing.classList.remove("hide");
+      create.classList.add("hide");
+    }
+    activeChat(){
+      const create = document.getElementById("createDiv")
+      const landing = document.getElementById("landingDiv")
+      const join = document.getElementById("joinDiv")
+      const chat = document.getElementById("chatDiv")
+      chat.classList.remove("hide");
+      join.classList.add("hide");
+      landing.classList.add("hide");
       create.classList.add("hide");
     }
 
@@ -222,6 +245,7 @@ class Login extends Component {
     this.addToken       = this.addToken.bind(this);
     this.homePage       = this.homePage.bind(this);
     this.activeCreate   = this.activeCreate.bind(this);
+    this.activeJoin   = this.activeJoin.bind(this);
     // this.pushToMyVillage= this.pushToMyVillage.bind(this);
   };
 
@@ -231,8 +255,8 @@ class Login extends Component {
     return(
       <div>
 
-        <Nav logout={this.logout} login={this.google} activeCreate={this.activeCreate} goHome={this.homePage}/>
-                <Join />
+        <Nav logout={this.logout} activeChat={this.activeChat} login={this.google} activeCreate={this.activeCreate} goHome={this.homePage} activeJoin={this.activeJoin}/>
+
         <p>{this.state.err}</p>
         <p>{this.state.userId}</p>
         <p>{this.state.successful}</p>
@@ -240,13 +264,14 @@ class Login extends Component {
 
         {/* <button onClick={this.pushToMyVillage}>Push To Your Village</button> */}
         <Create />
+        <Join />
         <Chat />
 
+
+
+        <br />
+        <br />
         <button onClick={this.subToTest}>Sub To Test Village</button>
-
-        <br />
-        <br />
-
         {/* <button onClick={this.sendPush}>Push Notification</button>
         <br />
         <br />

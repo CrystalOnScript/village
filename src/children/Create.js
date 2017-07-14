@@ -5,7 +5,7 @@ class Create extends Component {
 
   createVillage(event) {
       event.preventDefault()
-          let self = this;
+      let self = this;
       const user = firebase.auth().currentUser;
 
       if(user === null){
@@ -22,29 +22,55 @@ class Create extends Component {
           console.log(villageName)
           console.log(self.state.userToken)
           // TODO test this data with subbing to villages
+          // Get a key for a new Post.
+          let newVillageKey = firebase.database().ref().child("villages").push().key;
+          // let messageKey = firebase.database().ref().child("villages").push().key;
           let villageData = {
-            village: {
             villageName: villageName,
-            subscribedUsers: {
-                userId: user.uid,
-                token: self.state.userToken
-            }
-          }
+            subscribedUsers: null,
+
         }
-        // Get a key for a new Post.
-        let newVillageKey = firebase.database().ref().child("villages").push().key;
 
         // Write the new post's data simultaneously in the posts list and the user's post list.
+
         let updates = {};
         updates['/villages/' + newVillageKey] = villageData;
 
-        return firebase.database().ref().update(updates);
-
+        return firebase.database().ref().update(updates).then( ()=>{
           let newName = self.state.villageName
           self.setState({
             successfulCreate: "Thanks! You created village " +newName,
             villageName: ' '
            })
+
+        }).then(() => {
+          console.log('then worked for village create');
+          let chatData = {
+            villageKey: newVillageKey,
+            villageName: villageName,
+          }
+          let newChatKey = firebase.database().ref().child("chats").push().key;
+
+          let updates = {};
+          updates['/chats/' + newVillageKey] = chatData;
+          return firebase.database().ref().update(updates).then( ()=>{
+            let newMessageKey = firebase.database().ref().child("chats/" +newVillageKey+ "/messages").push().key;
+            let messageData = {
+              chat: "First Message",
+              username: "Welcome!"
+            }
+            let updates = {};
+
+            updates['chats/'+ newVillageKey +"/messages/" + newMessageKey] = messageData;
+              return firebase.database().ref().update(updates)
+            // firebase.database().ref('chats/'+newVillageKey+'/messages').push("first message")
+            // firebase.database().ref('chats/'+newVillageKey+'/messages').push("second message")
+            // firebase.database().ref('chats/'+newVillageKey+'/messages').push("third message")
+             })
+
+        })
+
+
         })
 
     }
