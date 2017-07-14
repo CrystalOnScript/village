@@ -18,9 +18,7 @@ class Join extends Component {
           userId: user.uid,
           token: self.state.userToken
       })
-      firebase.database().ref('users/'+ user.uid +"/villageSubs").push({
-          villageKey: key,
-      })
+      firebase.database().ref('users/'+ user.uid +"/villageSubs/").push(key)
 
     })
 
