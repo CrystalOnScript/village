@@ -45,6 +45,38 @@ class Create extends Component {
             successfulCreate: "Thanks! You created village " +newName,
             villageName: ' '
            })
+<<<<<<< HEAD
+=======
+
+        }).then(() => {
+          console.log('then worked for village create');
+          let chatData = {
+            villageKey: newVillageKey,
+            villageName: villageName,
+          }
+          let newChatKey = firebase.database().ref().child("chats").push().key;
+
+          let updates = {};
+          updates['/chats/' + newVillageKey] = chatData;
+          return firebase.database().ref().update(updates).then( ()=>{
+            let newMessageKey = firebase.database().ref().child("chats/" +newVillageKey+ "/messages").push().key;
+            let messageData = {
+              chat: "First Message",
+              username: "Welcome!"
+            }
+            let updates = {};
+
+            updates['chats/'+ newVillageKey +"/messages/" + newMessageKey] = messageData;
+              return firebase.database().ref().update(updates)
+            // firebase.database().ref('chats/'+newVillageKey+'/messages').push("first message")
+            // firebase.database().ref('chats/'+newVillageKey+'/messages').push("second message")
+            // firebase.database().ref('chats/'+newVillageKey+'/messages').push("third message")
+             })
+
+        })
+
+
+>>>>>>> parent of 4413f9b... updated logo and organized react modules
         })
 
     }

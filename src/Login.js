@@ -24,6 +24,34 @@ messaging.onMessage(function(payload) {
 });
 
 class Login extends Component {
+<<<<<<< HEAD
+
+  componentWillMount(){
+    firebase.auth().onAuthStateChanged(function(auth) {
+
+        const user = firebase.auth().currentUser;
+
+        //User authenticated and active session begins.
+        if (auth != null) {
+          console.log('User authenticated: ' + user.displayName);
+          console.log(user);
+          var googleBtn = document.getElementById('googleBtn');
+          googleBtn.classList.add('hide');
+          let lout = document.getElementById("logoutButton");
+          lout.classList.remove("hide")
+          let err = "Welcome, " + user.displayName;
+          let successful = "You are successfully logged in with Google."
+          this.setState({
+            err: err,
+            successful: successful,
+            showChat: true,
+          });
+        //User isn't authenticated.
+        } else {
+          console.log('User not authenticated.');
+        }
+=======
+>>>>>>> parent of 4413f9b... updated logo and organized react modules
 
   componentWillMount(){
     firebase.auth().onAuthStateChanged(function(auth) {
@@ -50,10 +78,16 @@ class Login extends Component {
           console.log('User not authenticated.');
         }
 
+<<<<<<< HEAD
+      }.bind(this));
+  };
+
+=======
 
       }.bind(this));
   };
 
+>>>>>>> parent of 4413f9b... updated logo and organized react modules
   logout(event){
     firebase.auth().signOut();
     let lout = document.getElementById("logoutButton");
@@ -188,16 +222,51 @@ class Login extends Component {
     activeCreate(){
       const create = document.getElementById("createDiv")
       const landing = document.getElementById("landingDiv")
+<<<<<<< HEAD
       create.classList.remove("hide");
       landing.classList.add("hide");
     }
+=======
+      const join = document.getElementById("joinDiv")
+      join.classList.add("hide");
+      create.classList.remove("hide");
+      landing.classList.add("hide");
+    }
+    activeJoin(){
+      const create = document.getElementById("createDiv")
+      const landing = document.getElementById("landingDiv")
+      const join = document.getElementById("joinDiv")
+      create.classList.add("hide");
+      landing.classList.add("hide");
+      join.classList.remove("hide");
+      console.log('clicked activeJoin')
+    }
+>>>>>>> parent of 4413f9b... updated logo and organized react modules
 
     homePage(){
       const create = document.getElementById("createDiv")
       const landing = document.getElementById("landingDiv")
+<<<<<<< HEAD
       landing.classList.remove("hide");
       create.classList.add("hide");
     }
+=======
+      const join = document.getElementById("joinDiv")
+      join.classList.add("hide");
+      landing.classList.remove("hide");
+      create.classList.add("hide");
+    }
+    activeChat(){
+      const create = document.getElementById("createDiv")
+      const landing = document.getElementById("landingDiv")
+      const join = document.getElementById("joinDiv")
+      const chat = document.getElementById("chatDiv")
+      chat.classList.remove("hide");
+      join.classList.add("hide");
+      landing.classList.add("hide");
+      create.classList.add("hide");
+    }
+>>>>>>> parent of 4413f9b... updated logo and organized react modules
 
   constructor(props){
     super(props);
@@ -222,6 +291,10 @@ class Login extends Component {
     this.addToken       = this.addToken.bind(this);
     this.homePage       = this.homePage.bind(this);
     this.activeCreate   = this.activeCreate.bind(this);
+<<<<<<< HEAD
+=======
+    this.activeJoin   = this.activeJoin.bind(this);
+>>>>>>> parent of 4413f9b... updated logo and organized react modules
     // this.pushToMyVillage= this.pushToMyVillage.bind(this);
   };
 
@@ -231,8 +304,13 @@ class Login extends Component {
     return(
       <div>
 
+<<<<<<< HEAD
         <Nav logout={this.logout} login={this.google} activeCreate={this.activeCreate} goHome={this.homePage}/>
                 <Join />
+=======
+        <Nav logout={this.logout} activeChat={this.activeChat} login={this.google} activeCreate={this.activeCreate} goHome={this.homePage} activeJoin={this.activeJoin}/>
+
+>>>>>>> parent of 4413f9b... updated logo and organized react modules
         <p>{this.state.err}</p>
         <p>{this.state.userId}</p>
         <p>{this.state.successful}</p>
@@ -240,7 +318,13 @@ class Login extends Component {
 
         {/* <button onClick={this.pushToMyVillage}>Push To Your Village</button> */}
         <Create />
+<<<<<<< HEAD
         <Chat />
+=======
+        <Join />
+        <Chat />
+
+>>>>>>> parent of 4413f9b... updated logo and organized react modules
 
         <button onClick={this.subToTest}>Sub To Test Village</button>
 

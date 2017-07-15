@@ -18,6 +18,8 @@ villageSDK.json
 .env.production.local
 
 /functions/villageSDK.json
+/functions/node_modules
+
 
 npm-debug.log*
 yarn-debug.log*

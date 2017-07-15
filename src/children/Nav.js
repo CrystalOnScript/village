@@ -13,9 +13,16 @@ class Nav extends Component {
             <a href="index.html" className="brand-logo center" onClick={this.goHome}><img src={LogoTran} className="navLogo" alt="logo" /></a>
             <ul id="nav-mobile" className="left hide-on-med-and-down">
               <li><a onClick={this.props.activeCreate}>Create Village</a></li>
+<<<<<<< HEAD
               <li><a href="badges.html">Join Village</a></li>
             </ul>
             <ul id="nav-mobile" className="right hide-on-med-and-down">
+=======
+              <li><a onClick={this.props.activeJoin}>Join Village</a></li>
+            </ul>
+            <ul id="nav-mobile" className="right hide-on-med-and-down">
+              <li><a onClick={this.props.activeChat}>Chat</a></li>
+>>>>>>> parent of 4413f9b... updated logo and organized react modules
               <li><a onClick={this.props.logout} className="hide" id="logoutButton">Logout</a></li>
               <li><a onClick={this.props.login} id="googleBtn">Login</a></li>
             </ul>
