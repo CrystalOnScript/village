@@ -42,9 +42,6 @@ class Create extends Component {
             successfulCreate: "Thanks! You created village " +newName,
             villageName: ' '
            })
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
         }).then(() => {
           console.log('then worked for village create');
@@ -70,7 +67,6 @@ class Create extends Component {
             // firebase.database().ref('chats/'+newVillageKey+'/messages').push("second message")
             // firebase.database().ref('chats/'+newVillageKey+'/messages').push("third message")
              })
-=======
 
         }).then(() => {
           // todo move to action create
@@ -97,15 +93,8 @@ class Create extends Component {
           //   firebase.database().ref('chats/'+newVillageKey+'/messages').push("second message")
           //   firebase.database().ref('chats/'+newVillageKey+'/messages').push("third message")
             //  })
->>>>>>> 284fc0d7a8a44c8791e37bd3136ba34e46c756d9
 
         })
-
-
-<<<<<<< HEAD
->>>>>>> parent of 4413f9b... updated logo and organized react modules
-=======
->>>>>>> 284fc0d7a8a44c8791e37bd3136ba34e46c756d9
         })
 
     }
