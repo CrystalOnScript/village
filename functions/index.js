@@ -45,13 +45,12 @@ function writeNewAction(tokenArray, msg, needyUser) {
       })
       .then((snap) => {
         const key = snap.key;
-        let newChatKey = admin.database().ref().child("chats").push().key;
-        console.log("this is newChatKey", newChatKey)
+
         console.log("We have tokens to send to payload: " + tokenArray);
         console.log("We have a needy user ID and an action key to send to payload: " + needyUser + ", " + key);
 
-        sendPayload(tokenArray, key, needyUser);
-      })
+        sendPayload(tokenArray, key, needyUser); 
+      })  
   });
 }
 
@@ -62,7 +61,7 @@ function sendPayload(tokenArray, key, needyUser) {
   const keyString = key.toString();
 
   const needyUserString = needyUser.toString();
-
+  
   const payload = {
     "data": {
       "actionID": keyString,
