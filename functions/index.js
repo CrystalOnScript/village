@@ -45,12 +45,13 @@ function writeNewAction(tokenArray, msg, needyUser) {
       })
       .then((snap) => {
         const key = snap.key;
-
+        let newChatKey = admin.database().ref().child("chats").push().key;
+        console.log("this is newChatKey", newChatKey)
         console.log("We have tokens to send to payload: " + tokenArray);
         console.log("We have a needy user ID and an action key to send to payload: " + needyUser + ", " + key);
 
-        sendPayload(tokenArray, key, needyUser); 
-      })  
+        sendPayload(tokenArray, key, needyUser);
+      })
   });
 }
 
@@ -61,7 +62,7 @@ function sendPayload(tokenArray, key, needyUser) {
   const keyString = key.toString();
 
   const needyUserString = needyUser.toString();
-  
+
   const payload = {
     "data": {
       "actionID": keyString,
@@ -89,6 +90,37 @@ exports.villageApp = functions.https.onRequest((req, res) => {
   console.log("Can I get at user ID, please, please, please? " + req.body.originalRequest.data.user.userId);
 
   const needyUser = req.body.originalRequest.data.user.userId;
+
+  function sendUserReponseUpdate(assistant, needyUser) {
+
+    const userResponses = [];
+
+    console.log("We are in the send user response update and hopefully needy user: " + needyUser);
+
+    admin.database().ref("/user-actions/" + needyUser + "/actions").once("value", function(snapshot){
+      snapshot.forEach(function(childSnapshot) {
+        var actionResponse = {};
+        actionResponse.actionTitle = childSnapshot.val().actionTitle;
+        actionResponse.responseTotal = childSnapshot.val().responseTotal;
+        actionResponse.yesResponses = childSnapshot.val().yesResponses;
+        userResponses.push(actionResponse);
+      })
+      console.log("How's the response array looking? " + userResponses[0].actionTitle);
+      const responseTitle = userResponses[0].actionTitle;
+      const responseCount = userResponses[0].responseTotal;
+      const responseYesCount = userResponses[0].yesResponses;
+
+      assistant.ask(assistant.buildRichResponse()
+        .addSimpleResponse("Alright, here's an update on your first action.")
+        .addBasicCard(assistant.buildBasicCard("Number of people who could respond: " + responseCount + ". Number of people who've said yes: " + responseYesCount)
+          .setTitle("Your request: " + responseTitle)
+          .addButton('Go To Chat')
+        )
+      )
+      //assistant.tell("Do you want to hear responses for " + action);
+    });
+}
+
   const assistant = new Assistant({request: req, response: res});
 
   let actionMap = new Map();
@@ -103,10 +135,7 @@ exports.villageApp = functions.https.onRequest((req, res) => {
   }
 
   function updateHandler (assistant) {
-    const msg = "Let's check on our responses now.";
-    // Todo: write function to check responses passing in action key.
-    // Todo: need to see how we can get the action key from the write new action function.
-    assistant.tell(msg);
+    sendUserReponseUpdate(assistant, needyUser);
   }
   // Todo: we may want to close of the function with a res.end();
   // Need to be careful though of any asynchronous processing.
