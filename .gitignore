@@ -17,8 +17,8 @@ villageSDK.json
 .env.test.local
 .env.production.local
 
-./functions/villageSDK.json
-./functions/node_modules
+/functions/villageSDK.json
+/functions/node_modules
 
 npm-debug.log*
 yarn-debug.log*
