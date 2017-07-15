@@ -188,9 +188,11 @@ class App extends Component {
             <ul id="nav-mobile" className="left hide-on-med-and-down">
               <li><a onClick={this.activeCreate}>Create Village</a></li>
               <li><a onClick={this.activeJoin}>Join Village</a></li>
+              <li><a onClick={this.activeChat}>Chat</a></li>
             </ul>
             <ul id="nav-mobile" className="right hide-on-med-and-down">
-              <li><a onClick={this.activeChat}>Chat</a></li>
+              <li><a>{this.state.err}</a></li>
+
               <li><a onClick={this.logout} className="hide" id="logoutButton">Logout</a></li>
               <li><a onClick={this.google} id="googleBtn">Login</a></li>
             </ul>
