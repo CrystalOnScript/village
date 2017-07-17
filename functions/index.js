@@ -2,6 +2,8 @@
 
 const functions = require('firebase-functions');
 
+const google = require('googleapis');
+
 const admin = require("firebase-admin");
 
 admin.initializeApp(functions.config().firebase);
@@ -130,12 +132,58 @@ exports.villageApp = functions.https.onRequest((req, res) => {
 
   function milkHandler (assistant) {
     const msg = "Contacting village now to get milk. Check back in 5 mins.";
+    authHandler(assistant);
     writeNewAction(tokenArray, msg, needyUser);
     assistant.tell(msg);
   }
 
   function updateHandler (assistant) {
     sendUserReponseUpdate(assistant, needyUser);
+  }
+
+  function authHandler (assistant) {
+    console.log("We are in the auth handler function.");
+
+    const authToken = assistant.getUser().accessToken;
+
+    console.log("We have an auth token: " + authToken);
+
+    const OAuth2 = google.auth.OAuth2;
+    const plus = google.plus('v1');
+
+
+    // Todo: create a new json file that stores OAuth json.
+    // Then require the file but never push to src.
+    // Hard-coding now as it works (of course I removed my stuff though).
+    const YOUR_CLIENT_ID = "Your client ID here.";
+
+    const YOUR_CLIENT_SECRET = "Your client secret here.";
+
+    const YOUR_REDIRECT_URL = "Your redirect here";
+
+    const oauth2Client = new OAuth2(
+      YOUR_CLIENT_ID,
+      YOUR_CLIENT_SECRET,
+      YOUR_REDIRECT_URL
+    );
+
+    oauth2Client.setCredentials({
+      access_token: authToken
+    })
+
+    plus.people.get({
+      userId: 'me',
+      auth: oauth2Client
+    }, function (err, response) {
+
+      if (err) {
+        console.log("Sad face we aren't getting user stuff: " + err);
+      } else {
+        console.log("Please be assistant user email: " + response.emails[0].value);
+
+        const needyUserEmail = response.emails[0].value;
+      }
+    })
   }
   // Todo: we may want to close of the function with a res.end();
   // Need to be careful though of any asynchronous processing.
