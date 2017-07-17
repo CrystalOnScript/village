@@ -49,7 +49,7 @@ class Create extends Component {
             villageKey: newVillageKey,
             villageName: villageName,
           }
-          let newChatKey = firebase.database().ref().child("chats").push().key;
+          // let newChatKey = firebase.database().ref().child("chats").push().key;
 
           let updates = {};
           updates['/chats/' + newVillageKey] = chatData;
