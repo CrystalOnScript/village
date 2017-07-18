@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import SelectedChat from './SelectedChat'
 
 
 class Chat extends Component {
@@ -16,8 +15,8 @@ class Chat extends Component {
         if(snapshot.val() != null){
 
           snapshot.forEach(function(childSnapshot) {
-            console.log("i'm here",childSnapshot.val().villageKey)
-          villageKeys.push(childSnapshot.val().villageKey)
+            console.log("i'm here",childSnapshot.val())
+          villageKeys.push(childSnapshot.val())
         })
 
 
@@ -25,7 +24,7 @@ class Chat extends Component {
           console.log('not subbed to any villages')
         }
 
-      }.bind(this))
+      })
       .then(() =>{
         self.setState({villageKeys: villageKeys})
         console.log(self.state.villageKeys)
@@ -37,6 +36,7 @@ class Chat extends Component {
             console.log('chat val', childSnapshot.val().villageKey)
             console.log('child snap of villages',childSnapshot.key)
             for(var i = 0; i<villageKeys.length; i++){
+              console.log('villageKey', childSnapshot.val().villageKey)
               if(villageKeys[i] === childSnapshot.val().villageKey){
                 console.log('child snap of villages val', childSnapshot.val())
                 foundChats.push(childSnapshot.val())
@@ -52,6 +52,8 @@ class Chat extends Component {
           console.log("foundChats", foundChats)
           self.setState({villageChats: foundChats})
         })
+
+        return console.log("finished finding chats")
       });
 
   }
@@ -160,21 +162,7 @@ class Chat extends Component {
       selectedChat: [],
       chatKey: '',
     };
-    firebase.database().ref('testvillage/messages').on('value', function(snapshot){
-       let self = this
-       let messages = [ ]
-        if(snapshot.val() != null){
-          snapshot.forEach(function(childSnapshot) {
-          console.log(childSnapshot.val())
-          messages.push(childSnapshot.val())
-          })
-          self.setState({messages: messages})
-          console.log(self.state.messages)
-        }else{
-          console.log('no messages yet')
-        }
 
-      }.bind(this));
 
       firebase.database().ref("chats/"+this.state.chatKey+"/messages").on('value', function(snapshot){
          let self = this
@@ -252,22 +240,8 @@ class Chat extends Component {
           <br />
           <button onClick={this.writeChatTwo} className="waves-effect waves-light btn #fbc02d yellow darken-2">Message</button>
         </div>
-        <SelectedChat />
-        <br />
-        <div className="messagesList scroll" id="messageBox" >
-               {this.state.messages.map(function(each){
-                      return <div>
 
-                        <p>{each.username}: <br />{each.chat}</p>
-                    </div>;
-               })}
-         </div>
-
-          <input value={this.state.chat} onChange={this.chatChange} className="inputBar"></input>
-
-          <br />
-          <button onClick={this.writeChat} className="waves-effect waves-light btn #fbc02d yellow darken-2">Message</button>
-      </div>
+     </div>
     );
   }
 }
