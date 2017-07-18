@@ -119,8 +119,16 @@ exports.villageApp = functions.https.onRequest((req, res) => {
           .addButton('Go To Chat')
         )
       )
-      //assistant.tell("Do you want to hear responses for " + action);
     });
+}
+
+function findVillagesForNeedyUser(assistant, needyUserEmail) {
+  
+  console.log("We are finding villages for this needy user: " + needyUserEmail);
+
+  // Todo: search village-users children to find email value that equals needy user email.
+  // Then send a list of village options with matching ID to user to select to send push notifications to.
+
 }
 
   const assistant = new Assistant({request: req, response: res});
@@ -155,11 +163,6 @@ exports.villageApp = functions.https.onRequest((req, res) => {
     // Todo: create a new json file that stores OAuth json.
     // Then require the file but never push to src.
     // Hard-coding now as it works (of course I removed my stuff though).
-    const YOUR_CLIENT_ID = "Your client ID here.";
-
-    const YOUR_CLIENT_SECRET = "Your client secret here.";
-
-    const YOUR_REDIRECT_URL = "Your redirect here";
 
     const oauth2Client = new OAuth2(
       YOUR_CLIENT_ID,
@@ -182,6 +185,8 @@ exports.villageApp = functions.https.onRequest((req, res) => {
         console.log("Please be assistant user email: " + response.emails[0].value);
 
         const needyUserEmail = response.emails[0].value;
+
+        findVillagesForNeedyUser(assistant, needyUserEmail);
       }
     })
   }
