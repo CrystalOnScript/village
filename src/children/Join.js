@@ -15,13 +15,14 @@ class Join extends Component {
     }).then(()=>{
 
       firebase.database().ref('village-users/'+key +"/" + user.uid).set({
-          email: user.email,
-          token: self.state.userToken
+        email: user.email,
+        token: self.state.userToken
       })
 
     })
 
   }
+
 
 
   constructor(props){
@@ -48,7 +49,7 @@ class Join extends Component {
           })
           self.setState({villages: villages})
           console.log(self.state.villages)
-        }else{
+        } else {
           console.log('no villages yet')
         }
 

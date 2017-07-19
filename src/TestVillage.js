@@ -1,23 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
-
 import firebase from 'firebase';
 import LogoTran from './images//villagetwo.png'
-import HelpLogo from './images/helpMe.png'
-import Chat from "./children/Chat";
+import Login from './Login';
 import TestChat from "./children/TestChat";
-import Create from "./children/Create"
-import Join from "./children/Join"
-// Initialize Firebase
-var config = {
-  apiKey: "AIzaSyCDa28-IY2mrgw0SvUJ8AfqCs1Ca8BfWFY",
-  authDomain: "villageherald-e65.firebaseapp.com",
-  databaseURL: "https://villageherald-e65.firebaseio.com",
-  projectId: "villageherald-e65",
-  storageBucket: "villageherald-e65.appspot.com",
-  messagingSenderId: "980213325202"
-};
-firebase.initializeApp(config);
+
 
 const messaging = firebase.messaging();
 
@@ -26,9 +13,20 @@ messaging.onMessage(function(payload) {
 });
 
 
-class App extends Component {
+class TestVillage extends Component {
 
+  componentDidMount(){
+
+    const testchat = document.getElementById("testChatDiv")
+    testchat.classList.remove("hide");
+
+    const appDiv = document.getElementById("appDiv")
+    appDiv.classList.add("hide");
+
+  }
   componentWillMount(){
+
+
     firebase.auth().onAuthStateChanged(function(auth) {
 
         const user = firebase.auth().currentUser;
@@ -42,6 +40,7 @@ class App extends Component {
           let lout = document.getElementById("logoutButton");
           lout.classList.remove("hide")
           let err = "Welcome, " + user.displayName;
+
           let successful = "You are successfully logged in with Google."
           this.setState({
             err: err,
@@ -116,31 +115,6 @@ class App extends Component {
     });
   }
 
-  activeCreate(){
-    const create = document.getElementById("createDiv")
-    const landing = document.getElementById("landingDiv")
-    const join = document.getElementById("joinDiv")
-    const chat = document.getElementById("chatDiv")
-    const testchat = document.getElementById("testChatDiv")
-    testchat.classList.add("hide");
-    chat.classList.add("hide");
-    join.classList.add("hide");
-    create.classList.remove("hide");
-    landing.classList.add("hide");
-  }
-  activeJoin(){
-    const create = document.getElementById("createDiv")
-    const landing = document.getElementById("landingDiv")
-    const join = document.getElementById("joinDiv")
-    const chat = document.getElementById("chatDiv")
-    const testchat = document.getElementById("testChatDiv")
-    testchat.classList.add("hide");
-    chat.classList.add("hide");
-    create.classList.add("hide");
-    landing.classList.add("hide");
-    join.classList.remove("hide");
-    console.log('clicked activeJoin')
-  }
 
   homePage(){
     const create = document.getElementById("createDiv")
@@ -154,18 +128,7 @@ class App extends Component {
     landing.classList.remove("hide");
     create.classList.add("hide");
   }
-  activeChat(){
-    const create = document.getElementById("createDiv")
-    const landing = document.getElementById("landingDiv")
-    const join = document.getElementById("joinDiv")
-    const chat = document.getElementById("chatDiv")
-    const testchat = document.getElementById("testChatDiv")
-    testchat.classList.add("hide");
-    chat.classList.remove("hide");
-    join.classList.add("hide");
-    landing.classList.add("hide");
-    create.classList.add("hide");
-  }
+
   activeTestChat(){
     const create = document.getElementById("createDiv")
     const landing = document.getElementById("landingDiv")
@@ -194,23 +157,17 @@ class App extends Component {
     this.logout         = this.logout.bind(this);
     this.google         = this.google.bind(this);
     this.homePage       = this.homePage.bind(this);
-    this.activeCreate   = this.activeCreate.bind(this);
-    this.activeJoin   = this.activeJoin.bind(this);
-    this.activeChat   = this.activeChat.bind(this);
     this.activeTestChat   = this.activeTestChat.bind(this);
     // this.pushToMyVillage= this.pushToMyVillage.bind(this);
   };
 
   render() {
     return (
-      <div className="App" id="appDiv">
+      <div className="App">
+        {/* TODO FIX DROPDOWN */}
         <ul id="dropdown1" className="dropdown-content">
 
           <li><a href="index.html" onClick={this.goHome}>Go Home</a></li>
-          <li><a onClick={this.activeCreate}>Create Village</a></li>
-          <li><a onClick={this.activeJoin}>Join Village</a></li>
-          <li><a onClick={this.activeChat}>Chat</a></li>
-          <li><a href="/testvillage">Test Village</a></li>
           <li><a onClick={this.logout} id="logoutButtonDrop">Logout</a></li>
           <li><a onClick={this.google} id="googleBtnDrop">Login</a></li>
 
@@ -219,16 +176,15 @@ class App extends Component {
           <div className="nav-wrapper #80deea cyan lighten-3">
             <a href="index.html" className="brand-logo center" onClick={this.goHome}><img src={LogoTran} className="navLogo" alt="logo" /></a>
             <ul id="nav-mobile" className="left hide-on-small-only">
-              <li><a onClick={this.activeCreate}>Create Village</a></li>
-              <li><a onClick={this.activeJoin}>Join Village</a></li>
-              <li><a onClick={this.activeChat}>Chat</a></li>
+              <li><a href="index.html" onClick={this.goHome}>Go Home</a></li>
+
 
             </ul>
             <ul id="nav-mobile" className="right hide-on-small-only">
               <li><a>{this.state.err}</a></li>
-              <li><a href="/testvillage">Test Village</a></li>
               <li><a onClick={this.logout} className="hide" id="logoutButton">Logout</a></li>
               <li><a onClick={this.google} id="googleBtn">Login</a></li>
+
             </ul>
             <ul className="hide-on-med-and-up right">
               <li><a className="dropdown-button" href="#!" data-activates="dropdown1"><i className="material-icons right">arrow_drop_down</i></a></li>
@@ -236,20 +192,11 @@ class App extends Component {
           </div>
         </nav>
         <br />
-        <div id="landingDiv">
-          <h4 className="logoFont">Make One, Join One, Takes One.</h4>
-          <img src={HelpLogo} alt="helplogo" id="helpLogo"/>
-        </div>
-
-
-        <Create />
-        <Join />
-        <Chat />
         <TestChat />
-
+        <Login />
       </div>
     );
   }
 }
 
-export default App;
+export default TestVillage;

@@ -103,14 +103,14 @@ class Login extends Component {
   render(){
 
     return(
-      <div>
+      <div id="loginDiv">
 
 
 
 
         <br />
         <br />
-        <button onClick={this.subToTest}>Sub To Test Village</button>
+        <button onClick={this.subToTest} className="waves-effect waves-light btn #e53935 red darken-1">Sub To Test Village</button>
         {/* <button onClick={this.sendPush}>Push Notification</button>
         <br />
         <br />
