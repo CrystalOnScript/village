@@ -10,7 +10,7 @@ class Create extends Component {
 
       if(user === null){
         self.setState({ successfulCreate: "You must be logged in to create a village."})
-      } else{
+      }else{
 
         const user = firebase.auth().currentUser;
         let villageName = this.state.villageName
@@ -27,9 +27,10 @@ class Create extends Component {
           // let messageKey = firebase.database().ref().child("villages").push().key;
           let villageData = {
             villageName: villageName,
-            //subscribedUsers: null,
+            subscribedUsers: null,
 
         }
+
         // Write the new post's data simultaneously in the posts list and the user's post list.
 
         let updates = {};
@@ -48,7 +49,7 @@ class Create extends Component {
             villageKey: newVillageKey,
             villageName: villageName,
           }
-          let newChatKey = firebase.database().ref().child("chats").push().key;
+          // let newChatKey = firebase.database().ref().child("chats").push().key;
 
           let updates = {};
           updates['/chats/' + newVillageKey] = chatData;
@@ -69,8 +70,8 @@ class Create extends Component {
 
         }).then(() => {
           // todo move to action create
+          
           console.log('Not too sure what is meant to happen here. Can we remove this?');
-
 
           // let chatData = {
           //   villageKey: newVillageKey,
@@ -96,11 +97,12 @@ class Create extends Component {
             //  })
 
         })
-      })
+        })
 
     }
 
-  }
+
+    }
 
   nameChange(event){
     this.setState({ villageName: event.target.value })

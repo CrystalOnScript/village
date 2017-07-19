@@ -18,6 +18,7 @@ class Join extends Component {
         email: user.email,
         token: self.state.userToken
       })
+      firebase.database().ref('users/'+ user.uid +"/villageSubs/").push(key)
 
     })
 

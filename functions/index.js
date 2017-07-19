@@ -184,7 +184,6 @@ exports.villageApp = functions.https.onRequest((req, res) => {
     const OAuth2 = google.auth.OAuth2;
     const plus = google.plus('v1');
 
-
     // Need to include a path to your OAuth creds.
     // These can't be pushed to github.
 
@@ -209,8 +208,6 @@ exports.villageApp = functions.https.onRequest((req, res) => {
         console.log("Please be assistant user email: " + response.emails[0].value);
 
         const needyUserEmail = response.emails[0].value;
-
-        findVillagesForNeedyUser(assistant, needyUserEmail);
       }
     })
   }
