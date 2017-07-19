@@ -73,19 +73,26 @@ self.addEventListener('notificationclick', function(event) {
 
         console.log("User said yes.");
 
-        const notificationData = event.notification.data.actionRecord;
-
-        const needyUserData = event.notification.data.needyUserRecord;
-
-        console.log("And now we can read the action record, I hope: " + notificationData);
-
-        console.log("And now we can read the needy user record, I hope: " + needyUserData);
-
-        const databaseRef = db.ref('/user-actions/' + needyUserData + '/actions/' + notificationData + '/yesResponses');
+        const databaseRef = db.ref('/testvillage/responseYesCount');
 
         databaseRef.transaction(function(currentYesCount) {
           return currentYesCount+1;
         });
+
+
+        //const notificationData = event.notification.data.actionRecord;
+
+        //const needyUserData = event.notification.data.needyUserRecord;
+
+        //console.log("And now we can read the action record, I hope: " + notificationData);
+
+        //console.log("And now we can read the needy user record, I hope: " + needyUserData);
+
+        //const databaseRef = db.ref('/user-actions/' + needyUserData + '/actions/' + notificationData + '/yesResponses');
+
+        //databaseRef.transaction(function(currentYesCount) {
+          //return currentYesCount+1;
+        //});
 
       } else if (event.action === 'no') {
 

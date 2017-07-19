@@ -70,7 +70,9 @@ class Create extends Component {
 
         }).then(() => {
           // todo move to action create
-          console.log('then worked for village create');
+          
+          console.log('Not too sure what is meant to happen here. Can we remove this?');
+
           // let chatData = {
           //   villageKey: newVillageKey,
           //   villageName: villageName,
